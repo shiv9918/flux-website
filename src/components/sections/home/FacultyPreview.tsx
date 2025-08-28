@@ -85,9 +85,10 @@ export default function FacultyPreview() {
             }`}
             style={{ transitionDelay: "300ms" }}
           >
-            Under the guidance of our Head of Department, our faculty team blends
-            expertise with dedication — shaping the minds of tomorrow through
-            innovation, research, and unwavering commitment to excellence.
+            Under the guidance of our Faculty Co-ordinator, our faculty team
+            blends expertise with dedication — shaping the minds of tomorrow
+            through innovation, research, and unwavering commitment to
+            excellence.
           </p>
 
           <div
@@ -148,7 +149,7 @@ export default function FacultyPreview() {
               >
                 <img
                   src={SatvikSir}
-                  alt="Head of Department"
+                  alt="Faculty Co-ordinator"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
@@ -160,7 +161,7 @@ export default function FacultyPreview() {
                 >
                   <div className="text-center text-white">
                     <div className="text-sm font-semibold">
-                      Head of Department
+                      Faculty Co-ordinator
                     </div>
                     <div className="text-xs text-neutral-300 mt-1">
                       Leading Excellence
@@ -182,9 +183,7 @@ export default function FacultyPreview() {
                 <BookOpen className="w-4 h-4" />
               </div>
 
-              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse border-2 border-neutral-800">
-                HOD
-              </div>
+              
             </div>
           </div>
         </div>
