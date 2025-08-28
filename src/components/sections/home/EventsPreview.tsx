@@ -7,7 +7,6 @@ import {
   Brain,
   ArrowRight,
   Sparkles,
-  LucideIcon,
 } from "lucide-react";
 
 // Type definitions
@@ -350,7 +349,8 @@ const EventCard = ({ event, index, onHover }: EventCardProps) => {
 
 // Main Component
 export default function ModernEventsPreview() {
-  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
+  // Removed unused state to fix TypeScript warning
+  const [, setSelectedEvent] = useState<EventItem | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -497,7 +497,7 @@ export default function ModernEventsPreview() {
       </div>
 
       {/* Custom Styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes slideUp {
           from {
             opacity: 0;
