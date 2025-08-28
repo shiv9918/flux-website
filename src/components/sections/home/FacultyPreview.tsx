@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Award, BookOpen } from "lucide-react";
-import hodImage from "../../../assets/images/hod.jpg";
+import SatvikSir from "../../../assets/images/SatvikSir.jpg";
 
 // Your existing SectionCTA component (keeping it exactly as is)
 const SectionCTA = ({
@@ -147,7 +147,7 @@ export default function FacultyPreview() {
                 }`}
               >
                 <img
-                  src={hodImage}
+                  src={SatvikSir}
                   alt="Head of Department"
                   className="w-full h-full object-cover"
                 />
