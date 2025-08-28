@@ -1,414 +1,461 @@
-import { motion, Variants } from 'framer-motion';
-import { Calendar, Clock, Users, Zap, Brain } from 'lucide-react';
-import SectionWrapper from '@/components/SectionWrapper';
-import SectionCTA from '@/components/sectionCTA';
-import { ReactNode } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Calendar, Clock, Users, Zap, Brain, ArrowRight, Sparkles } from 'lucide-react';
 
-interface EventItem {
-  id: number;
-  title: string;
-  date: string;
-  type: string;
-  icon: ReactNode;
-  participants: string;
-  description: string;
-  gradient: string;
-  borderGradient: string;
-  iconBg: string;
-  tagColor: string;
-  tagBg: string;
-}
+// Particle System Component
+const ParticleSystem = ({ isActive = true }) => {
+  const canvasRef = useRef(null);
+  const particles = useRef([]);
+  const animationId = useRef(null);
 
-// Remove unused interface
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-export default function EventsPreview() {
-  const events: EventItem[] = [
+    const ctx = canvas.getContext('2d');
+    const resizeCanvas = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initialize particles
+    const initParticles = () => {
+      particles.current = [];
+      for (let i = 0; i < 50; i++) {
+        particles.current.push({
+          x: Math.random() * canvas.offsetWidth,
+          y: Math.random() * canvas.offsetHeight,
+          size: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 0.5,
+          speedY: (Math.random() - 0.5) * 0.5,
+          opacity: Math.random() * 0.5 + 0.1,
+          color: `hsl(${Math.random() * 60 + 200}, 70%, 60%)`,
+          pulse: Math.random() * Math.PI * 2,
+        });
+      }
+    };
+
+    const animate = () => {
+      if (!isActive) return;
+      
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+      particles.current.forEach((particle) => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.pulse += 0.02;
+
+        // Wrap around edges
+        if (particle.x < 0) particle.x = canvas.offsetWidth;
+        if (particle.x > canvas.offsetWidth) particle.x = 0;
+        if (particle.y < 0) particle.y = canvas.offsetHeight;
+        if (particle.y > canvas.offsetHeight) particle.y = 0;
+
+        // Draw particle with pulsing effect
+        const pulseFactor = Math.sin(particle.pulse) * 0.5 + 1;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size * pulseFactor, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.globalAlpha = particle.opacity * (Math.sin(particle.pulse) * 0.3 + 0.7);
+        ctx.fill();
+
+        // Draw connections
+        particles.current.forEach((otherParticle) => {
+          const distance = Math.sqrt(
+            Math.pow(particle.x - otherParticle.x, 2) + 
+            Math.pow(particle.y - otherParticle.y, 2)
+          );
+          
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(otherParticle.x, otherParticle.y);
+            ctx.strokeStyle = particle.color;
+            ctx.globalAlpha = (1 - distance / 100) * 0.2;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        });
+      });
+
+      ctx.globalAlpha = 1;
+      animationId.current = requestAnimationFrame(animate);
+    };
+
+    initParticles();
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationId.current) {
+        cancelAnimationFrame(animationId.current);
+      }
+    };
+  }, [isActive]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none opacity-30"
+      style={{ width: '100%', height: '100%' }}
+    />
+  );
+};
+
+// Floating Elements Component
+const FloatingElements = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          className={`absolute animate-float-${i % 3 + 1} opacity-20`}
+          style={{
+            left: `${10 + i * 15}%`,
+            top: `${20 + (i % 2) * 40}%`,
+            animationDelay: `${i * 0.5}s`,
+            animationDuration: `${3 + i * 0.5}s`
+          }}
+        >
+          <div className={`w-${2 + (i % 3)} h-${2 + (i % 3)} bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-sm`} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Modern Event Card Component
+const EventCard = ({ event, index, onHover }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [ripples, setRipples] = useState([]);
+
+  const handleClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const newRipple = { x, y, id: Date.now() };
+    setRipples(prev => [...prev, newRipple]);
+    
+    setTimeout(() => {
+      setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id));
+    }, 600);
+  };
+
+  return (
+    <div
+      className={`group relative transform transition-all duration-500 ease-out cursor-pointer ${
+        isHovered ? 'scale-105 -translate-y-4' : 'hover:scale-102 hover:-translate-y-2'
+      }`}
+      style={{
+        animationDelay: `${index * 150}ms`,
+        animation: `slideUp 0.8s ease-out forwards`
+      }}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        onHover(event);
+      }}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
+    >
+      {/* Holographic background effect */}
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-500 animate-tilt" />
+      
+      {/* Glassmorphism card */}
+      <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+        {/* Animated gradient border */}
+        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+        </div>
+
+        {/* Ripple effects */}
+        {ripples.map((ripple) => (
+          <div
+            key={ripple.id}
+            className="absolute pointer-events-none animate-ripple"
+            style={{
+              left: ripple.x - 20,
+              top: ripple.y - 20,
+              width: 40,
+              height: 40,
+            }}
+          >
+            <div className="w-full h-full bg-white/20 rounded-full animate-ping" />
+          </div>
+        ))}
+
+        <div className="relative p-8">
+          {/* Floating icon */}
+          <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${event.iconBg} mb-6 transform transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110`}>
+            <div className="relative">
+              {event.icon}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20 rounded-full animate-pulse" />
+            </div>
+          </div>
+
+          {/* Event type with animated badge */}
+          <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium ${event.tagBg} ${event.tagColor} mb-6 transform transition-transform duration-300 group-hover:scale-105`}>
+            <div className="w-2 h-2 rounded-full bg-current animate-pulse" />
+            <span>{event.type}</span>
+            <Sparkles className="w-3 h-3" />
+          </div>
+
+          {/* Title with text gradient */}
+          <h3 className="font-bold text-2xl mb-4 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent group-hover:from-blue-400 group-hover:via-purple-400 group-hover:to-pink-400 transition-all duration-500">
+            {event.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-gray-300 mb-6 leading-relaxed group-hover:text-white transition-colors duration-300">
+            {event.description}
+          </p>
+
+          {/* Event details with icons */}
+          <div className="space-y-4 mb-6">
+            <div className="flex items-center space-x-3 text-gray-400 group-hover:text-blue-400 transition-colors duration-300">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <Calendar className="w-4 h-4" />
+              </div>
+              <span className="font-medium">{event.date}</span>
+            </div>
+            
+            <div className="flex items-center space-x-3 text-gray-400 group-hover:text-purple-400 transition-colors duration-300">
+              <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <Users className="w-4 h-4" />
+              </div>
+              <span className="font-medium">{event.participants} Expected</span>
+            </div>
+          </div>
+
+          {/* Status and CTA */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-ping absolute" />
+                <div className="w-3 h-3 bg-green-400 rounded-full" />
+              </div>
+              <span className="text-green-400 font-medium text-sm">Registration Open</span>
+            </div>
+            
+            <button className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-medium text-white transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 group/btn">
+              <span>Join Now</span>
+              <ArrowRight className="w-4 h-4 transform transition-transform group-hover/btn:translate-x-1" />
+            </button>
+          </div>
+
+          {/* Animated bottom accent */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+        </div>
+      </div>
+
+      {/* Floating particles on hover */}
+      {isHovered && (
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-white rounded-full animate-float-particle opacity-60"
+              style={{
+                left: `${20 + i * 15}%`,
+                top: `${30 + (i % 2) * 20}%`,
+                animationDelay: `${i * 0.2}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Main Component
+export default function ModernEventsPreview() {
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const events = [
     {
       id: 1,
       title: "Hack-e-thon Series",
       date: "Sep 15 – 16",
       type: "Competition",
-      icon: <Zap className="w-5 h-5" />,
+      icon: <Zap className="w-6 h-6 text-orange-400" />,
       participants: "120+",
-      description: "24-48 hour coding challenges focused on real-world problems",
-      gradient: "from-orange-500/20 via-red-500/20 to-pink-500/20",
-      borderGradient: "from-orange-500/50 to-red-500/50",
-      iconBg: "bg-orange-500/10",
+      description: "24-48 hour coding challenges focused on real-world problems with cutting-edge tech stacks",
+      iconBg: "bg-orange-500/20",
       tagColor: "text-orange-400",
-      tagBg: "bg-orange-500/10"
+      tagBg: "bg-orange-500/20"
     },
     {
       id: 2,
       title: "Annual Research Conclave",
       date: "Oct 20 – 22",
       type: "Conference",
-      icon: <Brain className="w-5 h-5" />,
+      icon: <Brain className="w-6 h-6 text-blue-400" />,
       participants: "200+",
-      description: "Invited talks, panel discussions, and technical workshops with experts",
-      gradient: "from-blue-500/20 via-cyan-500/20 to-teal-500/20",
-      borderGradient: "from-blue-500/50 to-cyan-500/50",
-      iconBg: "bg-blue-500/10",
+      description: "Invited talks, panel discussions, and technical workshops with industry experts and researchers",
+      iconBg: "bg-blue-500/20",
       tagColor: "text-blue-400",
-      tagBg: "bg-blue-500/10"
+      tagBg: "bg-blue-500/20"
     },
     {
       id: 3,
       title: "Tech Conferences",
       date: "Nov 8 – 10",
       type: "Conference",
-      icon: <Users className="w-5 h-5" />,
+      icon: <Users className="w-6 h-6 text-purple-400" />,
       participants: "150+",
-      description: "Student-led conferences with paper submissions and presentations",
-      gradient: "from-purple-500/20 via-violet-500/20 to-indigo-500/20",
-      borderGradient: "from-purple-500/50 to-violet-500/50",
-      iconBg: "bg-purple-500/10",
+      description: "Student-led conferences with paper submissions and presentations on emerging technologies",
+      iconBg: "bg-purple-500/20",
       tagColor: "text-purple-400",
-      tagBg: "bg-purple-500/10"
+      tagBg: "bg-purple-500/20"
     }
-  ]
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1
-      }
-    }
-  }
-
-  const cardVariants: Variants = {
-    hidden: { 
-      opacity: 0,
-      y: 30,
-      scale: 0.95
-    },
-    visible: { 
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  }
+  ];
 
   return (
-    <div className="relative">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <motion.div 
-          className="absolute top-1/4 right-1/4 w-40 h-40 bg-primary/5 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3]
-          }}
-          transition={{ 
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div 
-          className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-primary/5 rounded-full blur-2xl"
-          animate={{ 
-            scale: [1.2, 0.8, 1.2],
-            opacity: [0.4, 0.7, 0.4]
-          }}
-          transition={{ 
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2
-          }}
-        />
-      </div>
+    <div className="relative min-h-screen  overflow-hidden">
+      {/* Particle System Background */}
+      <ParticleSystem isActive={true} />
+      
+      {/* Floating Elements */}
+      <FloatingElements />
 
-      <SectionWrapper
-        title={
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
-            <motion.div
-              className="absolute -top-4 left-0 w-12 h-0.5 bg-primary rounded-full"
-              initial={{ width: 0 }}
-              whileInView={{ width: 48 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            />
-            <span 
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold"
-              style={{
-                background: "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text"
-              }}
-            >
-              Upcoming <span className="text-primary">Events</span>
-            </span>
+      {/* Main Content */}
+      <div className="relative z-10 container mx-auto px-6 py-16">
+        {/* Header Section */}
+        <div className={`text-center mb-16 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <div className="relative inline-block">
+            <h1 className="text-6xl md:text-8xl font-black bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-6">
+              Upcoming
+              <br />
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Events
+              </span>
+            </h1>
             
             {/* Floating calendar icon */}
-            <motion.div
-              className="absolute -right-8 top-2 text-primary/30"
-              animate={{ 
-                y: [0, -4, 0],
-                rotate: [0, 5, -5, 0]
-              }}
-              transition={{ 
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <Calendar className="w-6 h-6" />
-            </motion.div>
-          </motion.div>
-        }
-        description={
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="relative"
-          >
-            <span className="text-lg text-muted-foreground">
-              Stay in the loop with our latest workshops, meetups, and tech festivals designed to{" "}
-              <motion.span 
-                className="text-primary font-medium"
-                animate={{ 
-                  textShadow: [
-                    "0 0 0px transparent", 
-                    "0 0 8px hsl(var(--primary)/0.3)", 
-                    "0 0 0px transparent"
-                  ]
-                }}
-                transition={{ 
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                spark your curiosity
-              </motion.span>
-              .
+            <div className="absolute -top-4 -right-12 text-blue-400/50 animate-float-slow">
+              <Calendar className="w-12 h-12" />
+            </div>
+          </div>
+
+          <p className={`text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            Stay in the loop with our latest workshops, meetups, and tech festivals designed to{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 font-semibold animate-pulse">
+              spark your curiosity
             </span>
-          </motion.div>
-        }
-        cta={
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <SectionCTA 
-              to="/events" 
-              label="🎯 View All Events →" 
-              variant="primary"
-            />
-          </motion.div>
-        }
-      >
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
+            .
+          </p>
+
+          {/* CTA Button */}
+          <div className={`mt-8 transform transition-all duration-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <button className="inline-flex items-center justify-center rounded-md px-5 py-3 font-medium bg-primary text-black hover:brightness-110 transition transform hover:scale-105">
+              🎯 View All Events →
+            </button>
+          </div>
+        </div>
+
+        {/* Events Grid */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-16">
           {events.map((event, index) => (
-            <motion.div
+            <EventCard
               key={event.id}
-              variants={cardVariants}
-              whileHover={{ 
-                y: -8,
-                scale: 1.02,
-                transition: { duration: 0.2 }
-              }}
-              className="group relative"
-            >
-              {/* Animated background glow */}
-              <motion.div
-                className={`absolute -inset-1 rounded-xl bg-gradient-to-br ${event.gradient} opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500`}
-                initial={{ scale: 0.8 }}
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.3 }}
-              />
-              
-              {/* Main card */}
-              <div className="relative p-6 bg-card/90 backdrop-blur-sm rounded-xl border border-border hover:border-transparent shadow-sm hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 h-full">
-                
-                {/* Animated border gradient */}
-                <motion.div
-                  className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                  style={{
-                    background: `linear-gradient(135deg, ${event.borderGradient.replace('from-', '').replace('/50', '/20').replace(' to-', ', ')}) padding-box, linear-gradient(135deg, ${event.borderGradient.replace('from-', '').replace('/50', '/40').replace(' to-', ', ')}) border-box`,
-                    border: '1px solid transparent'
-                  }}
-                />
-
-                {/* Event type badge */}
-                <motion.div 
-                  className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${event.tagBg} ${event.tagColor} mb-4`}
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 + 0.3, type: "spring", stiffness: 200 }}
-                >
-                  {event.icon}
-                  <span>{event.type}</span>
-                </motion.div>
-
-                {/* Event title with enhanced typography */}
-                <motion.h3 
-                  className="font-bold text-lg mb-2 group-hover:text-primary transition-colors duration-300"
-                  whileHover={{ x: 2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {event.title}
-                </motion.h3>
-
-                {/* Event description */}
-                <p className="text-sm text-muted-foreground/80 mb-4 leading-relaxed">
-                  {event.description}
-                </p>
-
-                {/* Event details */}
-                <div className="space-y-3 mb-4">
-                  <motion.div 
-                    className="flex items-center space-x-2 text-sm text-muted-foreground"
-                    whileHover={{ x: 2 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Calendar className="w-4 h-4 text-primary" />
-                    <span>{event.date}</span>
-                  </motion.div>
-                  
-                  <motion.div 
-                    className="flex items-center space-x-2 text-sm text-muted-foreground"
-                    whileHover={{ x: 2 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Users className="w-4 h-4 text-primary" />
-                    <span>{event.participants} Expected</span>
-                  </motion.div>
-                </div>
-
-                {/* Registration status indicator */}
-                <motion.div 
-                  className="flex items-center justify-between"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 + 0.5 }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <motion.div 
-                      className="w-2 h-2 bg-green-400 rounded-full"
-                      animate={{ 
-                        scale: [1, 1.3, 1],
-                        opacity: [1, 0.6, 1]
-                      }}
-                      transition={{ 
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: index * 0.3
-                      }}
-                    />
-                    <span className="text-xs text-green-400 font-medium">Registration Open</span>
-                  </div>
-                  
-                  <motion.button
-                    className="text-xs text-primary hover:text-primary/80 font-medium transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Learn More →
-                  </motion.button>
-                </motion.div>
-
-                {/* Bottom accent line */}
-                <motion.div 
-                  className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r opacity-30 group-hover:opacity-100 transition-opacity duration-300 rounded-full"
-                  style={{
-                    backgroundImage: `linear-gradient(90deg, ${event.borderGradient.replace('from-', '').replace('/50', '').replace(' to-', ', ')})`
-                  }}
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-
-                {/* Floating particles */}
-                <motion.div
-                  className="absolute top-4 right-4 w-1 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  animate={{
-                    y: [0, -12, 0],
-                    opacity: [0.4, 1, 0.4],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    delay: index * 0.5,
-                  }}
-                />
-                <motion.div
-                  className="absolute top-8 right-2 w-0.5 h-0.5 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  animate={{
-                    y: [0, -8, 0],
-                    opacity: [0.3, 0.8, 0.3],
-                  }}
-                  transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    delay: index * 0.3 + 0.5,
-                  }}
-                />
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Bottom decorative section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="text-center mt-12 pt-8 border-t border-border/30"
-        >
-          <motion.div 
-            className="inline-flex items-center space-x-3 text-sm text-muted-foreground"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Clock className="w-4 h-4 text-primary" />
-            <span>More exciting events coming soon</span>
-            <motion.div
-              className="w-2 h-2 bg-primary rounded-full"
-              animate={{ 
-                scale: [1, 1.5, 1],
-                opacity: [1, 0.4, 1]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              event={event}
+              index={index}
+              onHover={setSelectedEvent}
             />
-          </motion.div>
-        </motion.div>
-      </SectionWrapper>
+          ))}
+        </div>
+
+        {/* Bottom Section */}
+        <div className={`text-center transform transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <div className="flex items-center justify-center space-x-4 text-gray-400">
+            <div className="flex items-center space-x-2">
+              <Clock className="w-5 h-5 text-blue-400" />
+              <span className="text-lg font-medium">More exciting events coming soon</span>
+            </div>
+            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse" />
+          </div>
+        </div>
+      </div>
+
+      {/* Custom Styles */}
+      <style jsx>{`
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes float-1 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes float-2 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(-180deg); }
+        }
+
+        @keyframes float-3 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-25px) rotate(90deg); }
+        }
+
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(10deg); }
+        }
+
+        @keyframes float-particle {
+          0% { transform: translateY(0px) scale(0); opacity: 0; }
+          50% { transform: translateY(-20px) scale(1); opacity: 1; }
+          100% { transform: translateY(-40px) scale(0); opacity: 0; }
+        }
+
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+
+        @keyframes tilt {
+          0%, 50%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(1deg); }
+          75% { transform: rotate(-1deg); }
+        }
+
+        @keyframes ripple {
+          0% { transform: scale(0); opacity: 1; }
+          100% { transform: scale(4); opacity: 0; }
+        }
+
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        .animate-float-1 { animation: float-1 3s ease-in-out infinite; }
+        .animate-float-2 { animation: float-2 3.5s ease-in-out infinite; }
+        .animate-float-3 { animation: float-3 4s ease-in-out infinite; }
+        .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+        .animate-float-particle { animation: float-particle 2s ease-out infinite; }
+        .animate-shimmer { animation: shimmer 2s linear infinite; }
+        .animate-tilt { animation: tilt 10s ease-in-out infinite; }
+        .animate-ripple { animation: ripple 0.6s linear; }
+        .animate-gradient-x { animation: gradient-x 3s ease infinite; background-size: 200% 200%; }
+      `}</style>
     </div>
-  )
+  );
 }
