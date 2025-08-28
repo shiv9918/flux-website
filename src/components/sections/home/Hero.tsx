@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import SectionCTA from "@/components/sectionCTA";
 import logo from "@/assets/images/flux-logo.png";
 
-import { Variants } from 'framer-motion';
+import { Variants } from "framer-motion";
 
 const textParent: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -22,13 +22,13 @@ const textParent: Variants = {
 
 const textChild: Variants = {
   hidden: { opacity: 0, y: 12 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { 
-      duration: 0.5, 
-      ease: [0.16, 1, 0.3, 1] 
-    } 
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+    },
   },
 };
 
@@ -38,11 +38,11 @@ const logoEnter: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { 
-      type: "spring", 
-      stiffness: 160, 
-      damping: 18, 
-      mass: 0.8 
+    transition: {
+      type: "spring",
+      stiffness: 160,
+      damping: 18,
+      mass: 0.8,
     },
   },
 };
@@ -52,7 +52,7 @@ const TypewriterMotto = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const words = ["INNOVATE", "INTERACT", "IMPACT"];
 
   useEffect(() => {
@@ -77,13 +77,14 @@ const TypewriterMotto = () => {
   }, [currentText, isDeleting, currentWordIndex]);
 
   return (
-    <span 
+    <span
       className="relative inline-block min-w-[200px]"
       style={{
-        background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%)",
+        background:
+          "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
-        backgroundClip: "text"
+        backgroundClip: "text",
       }}
     >
       {currentText}
@@ -105,47 +106,47 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12 relative">
           {/* Enhanced animated background elements */}
           <div className="absolute inset-0 -z-20 overflow-hidden">
-            <motion.div 
+            <motion.div
               className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/30 rounded-full"
-              animate={{ 
+              animate={{
                 scale: [1, 1.5, 1],
-                opacity: [0.3, 0.8, 0.3]
+                opacity: [0.3, 0.8, 0.3],
               }}
-              transition={{ 
-                duration: 3, 
+              transition={{
+                duration: 3,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
             />
-            <motion.div 
+            <motion.div
               className="absolute top-3/4 left-1/3 w-1 h-1 bg-primary/40 rounded-full"
-              animate={{ 
+              animate={{
                 scale: [1, 2, 1],
                 opacity: [0.4, 0.9, 0.4],
-                rotate: [0, 180, 360]
+                rotate: [0, 180, 360],
               }}
-              transition={{ 
-                duration: 4, 
+              transition={{
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: 1
+                delay: 1,
               }}
             />
-            <motion.div 
+            <motion.div
               className="absolute top-1/2 right-1/4 w-1.5 h-1.5 bg-primary/20 rounded-full"
-              animate={{ 
+              animate={{
                 scale: [1, 1.8, 1],
                 opacity: [0.2, 0.6, 0.2],
-                y: [0, -20, 0]
+                y: [0, -20, 0],
               }}
-              transition={{ 
-                duration: 5, 
+              transition={{
+                duration: 5,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: 0.5
+                delay: 0.5,
               }}
             />
-            
+
             {/* Additional floating particles */}
             {[...Array(6)].map((_, i) => (
               <motion.div
@@ -158,13 +159,13 @@ export default function Hero() {
                 animate={{
                   y: [0, -30, 0],
                   opacity: [0.2, 0.8, 0.2],
-                  scale: [0.5, 1.2, 0.5]
+                  scale: [0.5, 1.2, 0.5],
                 }}
                 transition={{
                   duration: 3 + i * 0.5,
                   repeat: Infinity,
                   delay: i * 0.8,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
                 }}
               />
             ))}
@@ -178,17 +179,17 @@ export default function Hero() {
             className="order-2 lg:order-1 relative"
           >
             {/* Animated accent line */}
-            <motion.div 
+            <motion.div
               variants={textChild}
               className="w-16 h-1 bg-gradient-to-r from-primary to-primary/50 mb-6 rounded-full"
               animate={{
                 width: [64, 80, 64],
-                opacity: [0.8, 1, 0.8]
+                opacity: [0.8, 1, 0.8],
               }}
               transition={{
                 duration: 3,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
             />
 
@@ -197,22 +198,23 @@ export default function Hero() {
                 <motion.span
                   className="block"
                   style={{
-                    background: "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
+                    background:
+                      "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    backgroundClip: "text"
+                    backgroundClip: "text",
                   }}
                   animate={{
                     textShadow: [
                       "0 0 0px transparent",
                       "0 0 10px rgba(255,255,255,0.3)",
-                      "0 0 0px transparent"
-                    ]
+                      "0 0 0px transparent",
+                    ],
                   }}
                   transition={{
                     duration: 4,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   }}
                 >
                   <TypewriterMotto />
@@ -221,43 +223,53 @@ export default function Hero() {
             </motion.div>
 
             {/* Floating subtitle */}
-            <motion.div 
-              variants={textChild} 
+            <motion.div
+              variants={textChild}
               className="relative mb-6"
               animate={{
                 y: [0, -5, 0],
-                opacity: [0.8, 1, 0.8]
+                opacity: [0.8, 1, 0.8],
               }}
               transition={{
                 duration: 4,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
             >
               <motion.h2
                 className="text-[clamp(1.8rem,5vw,3.2rem)] font-bold leading-tight tracking-tight"
                 style={{
-                  background: "linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)",
+                  background:
+                    "linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  backgroundClip: "text"
+                  backgroundClip: "text",
                 }}
               >
                 <motion.span
-                  animate={{ 
-                    textShadow: ["0 0 0px transparent", "0 0 8px hsl(var(--primary)/0.3)", "0 0 0px transparent"]
+                  animate={{
+                    textShadow: [
+                      "0 0 0px transparent",
+                      "0 0 8px hsl(var(--primary)/0.3)",
+                      "0 0 0px transparent",
+                    ],
                   }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
                   Igniting Ideas,
                 </motion.span>{" "}
-                <span 
+                <span
                   className="relative"
                   style={{
-                    background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.7) 100%)",
+                    background:
+                      "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.7) 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    backgroundClip: "text"
+                    backgroundClip: "text",
                   }}
                 >
                   Shaping Futures
@@ -275,50 +287,53 @@ export default function Hero() {
                   >
                     🚀
                   </motion.span>{" "}
-                  <strong>Unleashing Innovation</strong> in Computer Science & Engineering
+                  <strong>Unleashing Innovation</strong> in Computer Science &
+                  Engineering
                 </p>
                 <p className="text-base text-muted-foreground/80 leading-relaxed max-w-xl mt-3">
-                  Join <strong className="text-primary font-semibold">FLUX</strong> – where brilliant minds 
-                  converge to push the boundaries of technology, foster groundbreaking research, 
-                  and build the future of computing.
+                  Join{" "}
+                  <strong className="text-primary font-semibold">FLUX</strong> –
+                  where brilliant minds converge to push the boundaries of
+                  technology, foster groundbreaking research, and build the
+                  future of computing.
                 </p>
               </div>
-              
+
               {/* Animated feature tags */}
-              <motion.div 
+              <motion.div
                 className="flex items-center space-x-4 text-sm text-muted-foreground/70 pt-2"
                 variants={textChild}
               >
-                <motion.div 
+                <motion.div
                   className="flex items-center space-x-1"
                   animate={{ y: [0, -2, 0] }}
                   transition={{ duration: 3, repeat: Infinity, delay: 0 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-2 h-2 bg-primary/60 rounded-full"
                     animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
                   <span>Innovation Hub</span>
                 </motion.div>
-                <motion.div 
+                <motion.div
                   className="flex items-center space-x-1"
                   animate={{ y: [0, -2, 0] }}
                   transition={{ duration: 3, repeat: Infinity, delay: 0.3 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-2 h-2 bg-primary/60 rounded-full"
                     animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
                   />
                   <span>Research Excellence</span>
                 </motion.div>
-                <motion.div 
+                <motion.div
                   className="flex items-center space-x-1"
                   animate={{ y: [0, -2, 0] }}
                   transition={{ duration: 3, repeat: Infinity, delay: 0.6 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-2 h-2 bg-primary/60 rounded-full"
                     animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
@@ -329,25 +344,23 @@ export default function Hero() {
             </motion.div>
 
             {/* Animated CTA buttons with color loading loops */}
-            <motion.div
-              variants={textChild}
-              className="flex flex-wrap gap-4"
-            >
+            <motion.div variants={textChild} className="flex flex-wrap gap-4">
               <motion.div
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 className="relative overflow-hidden rounded-lg"
                 style={{
-                  background: "linear-gradient(45deg, hsl(var(--primary)), hsl(var(--primary)/0.8), hsl(var(--primary)))",
+                  background:
+                    "linear-gradient(45deg, hsl(var(--primary)), hsl(var(--primary)/0.8), hsl(var(--primary)))",
                   backgroundSize: "300% 300%",
                 }}
                 animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
                 transition={{
                   duration: 3,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
                 }}
               >
                 <SectionCTA
@@ -362,34 +375,35 @@ export default function Hero() {
                 whileTap={{ scale: 0.98 }}
                 className="relative overflow-hidden rounded-lg"
                 style={{
-                  background: "linear-gradient(45deg, transparent, hsl(var(--primary)/0.3), transparent)",
+                  background:
+                    "linear-gradient(45deg, transparent, hsl(var(--primary)/0.3), transparent)",
                   backgroundSize: "300% 300%",
-                  border: "1px solid hsl(var(--primary)/0.5)"
+                  border: "1px solid hsl(var(--primary)/0.5)",
                 }}
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   borderColor: [
                     "hsl(var(--primary)/0.3)",
                     "hsl(var(--primary)/0.8)",
-                    "hsl(var(--primary)/0.3)"
-                  ]
+                    "hsl(var(--primary)/0.3)",
+                  ],
                 }}
                 transition={{
                   backgroundPosition: {
                     duration: 4,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: 0.5
+                    delay: 0.5,
                   },
                   borderColor: {
                     duration: 2,
                     repeat: Infinity,
-                    ease: "easeInOut"
-                  }
+                    ease: "easeInOut",
+                  },
                 }}
               >
                 <SectionCTA
-                  to="/events"
+                  to="events"
                   label="⚡ Upcoming Events"
                   variant="outline"
                 />
@@ -397,7 +411,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Interactive scrolling tagline */}
-            <motion.div 
+            <motion.div
               variants={textChild}
               className="mt-8 pt-6 border-t border-muted/20 overflow-hidden"
               onHoverStart={() => setIsHovered(true)}
@@ -406,20 +420,24 @@ export default function Hero() {
               <motion.div
                 className="whitespace-nowrap text-sm text-muted-foreground/50 cursor-pointer"
                 animate={{
-                  x: [0, -100]
+                  x: [0, -100],
                 }}
                 transition={{
                   duration: isHovered ? 25 : 8,
                   repeat: Infinity,
-                  ease: "linear"
+                  ease: "linear",
                 }}
               >
-                <span className="mr-8">Future Leaders of Unbound Experiments</span>
+                <span className="mr-8">
+                  Future Leaders of Unbound Experiments
+                </span>
                 <span className="mr-8">Innovation • Research • Excellence</span>
                 <span className="mr-8">Building Tomorrow's Technology</span>
                 <span className="mr-8">Computer Science & Engineering</span>
                 <span className="mr-8">MMMUT Gorakhpur</span>
-                <span className="mr-8">Future Leaders of Unbound Experiments</span>
+                <span className="mr-8">
+                  Future Leaders of Unbound Experiments
+                </span>
                 <span className="mr-8">Innovation • Research • Excellence</span>
               </motion.div>
             </motion.div>
@@ -433,36 +451,38 @@ export default function Hero() {
               <motion.div
                 className="h-[32rem] w-[32rem] rounded-full"
                 style={{
-                  background: "radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, rgba(34, 197, 94, 0.06) 30%, rgba(16, 185, 129, 0.04) 60%, transparent 100%)",
-                  filter: "blur(60px)"
+                  background:
+                    "radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, rgba(34, 197, 94, 0.06) 30%, rgba(16, 185, 129, 0.04) 60%, transparent 100%)",
+                  filter: "blur(60px)",
                 }}
-                animate={{ 
+                animate={{
                   scale: [0.8, 1.2, 0.8],
-                  opacity: [0.6, 0.9, 0.6]
+                  opacity: [0.6, 0.9, 0.6],
                 }}
-                transition={{ 
-                  duration: 12, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
+                transition={{
+                  duration: 12,
+                  repeat: Infinity,
+                  ease: "easeInOut",
                 }}
               />
-              
+
               {/* Secondary glow layer */}
               <motion.div
                 className="absolute h-80 w-80 rounded-full"
                 style={{
-                  background: "radial-gradient(circle at center, rgba(34, 197, 94, 0.12) 0%, rgba(16, 185, 129, 0.08) 50%, transparent 100%)",
-                  filter: "blur(40px)"
+                  background:
+                    "radial-gradient(circle at center, rgba(34, 197, 94, 0.12) 0%, rgba(16, 185, 129, 0.08) 50%, transparent 100%)",
+                  filter: "blur(40px)",
                 }}
-                animate={{ 
+                animate={{
                   scale: [1.1, 0.9, 1.1],
-                  opacity: [0.4, 0.7, 0.4]
+                  opacity: [0.4, 0.7, 0.4],
                 }}
-                transition={{ 
-                  duration: 8, 
-                  repeat: Infinity, 
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
                   ease: "easeInOut",
-                  delay: 2
+                  delay: 2,
                 }}
               />
             </div>
@@ -485,16 +505,16 @@ export default function Hero() {
                   className="w-72 sm:w-80 h-auto object-contain relative z-10"
                   style={{
                     filter: "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))",
-                    mixBlendMode: "normal"
+                    mixBlendMode: "normal",
                   }}
-                  animate={{ 
+                  animate={{
                     y: [0, -15, 0],
                     rotate: [0, 3, -3, 0],
                     filter: [
                       "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))",
                       "drop-shadow(0 0 50px rgba(16, 185, 129, 0.6))",
-                      "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))"
-                    ]
+                      "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))",
+                    ],
                   }}
                   transition={{
                     delay: 0.9,
@@ -503,15 +523,15 @@ export default function Hero() {
                     ease: "easeInOut",
                   }}
                 />
-                
+
                 {/* Seamlessly blended circular gradients behind logo */}
                 <div className="absolute inset-0 -z-10">
                   <motion.div
                     className="absolute inset-0 rounded-full"
                     style={{
-                      width: "140%", 
-                      height: "140%", 
-                      top: "-20%", 
+                      width: "140%",
+                      height: "140%",
+                      top: "-20%",
                       left: "-20%",
                       background: `
                         conic-gradient(from 0deg at 50% 50%, 
@@ -521,24 +541,32 @@ export default function Hero() {
                           rgba(34, 197, 94, 0.2) 360deg
                         )
                       `,
-                      filter: "blur(8px)"
+                      filter: "blur(8px)",
                     }}
-                    animate={{ 
+                    animate={{
                       rotate: 360,
-                      scale: [1, 1.15, 1]
+                      scale: [1, 1.15, 1],
                     }}
-                    transition={{ 
-                      rotate: { duration: 18, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                    transition={{
+                      rotate: {
+                        duration: 18,
+                        repeat: Infinity,
+                        ease: "linear",
+                      },
+                      scale: {
+                        duration: 5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
                     }}
                   />
-                  
+
                   <motion.div
                     className="absolute inset-0 rounded-full"
                     style={{
-                      width: "170%", 
-                      height: "170%", 
-                      top: "-35%", 
+                      width: "170%",
+                      height: "170%",
+                      top: "-35%",
                       left: "-35%",
                       background: `
                         conic-gradient(from 180deg at 50% 50%, 
@@ -549,15 +577,24 @@ export default function Hero() {
                           rgba(34, 197, 94, 0.08) 360deg
                         )
                       `,
-                      filter: "blur(12px)"
+                      filter: "blur(12px)",
                     }}
-                    animate={{ 
+                    animate={{
                       rotate: -360,
-                      scale: [1, 1.08, 1]
+                      scale: [1, 1.08, 1],
                     }}
-                    transition={{ 
-                      rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                    transition={{
+                      rotate: {
+                        duration: 25,
+                        repeat: Infinity,
+                        ease: "linear",
+                      },
+                      scale: {
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1,
+                      },
                     }}
                   />
                 </div>
