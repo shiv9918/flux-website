@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Calendar,
   Clock,
@@ -7,23 +7,56 @@ import {
   Brain,
   ArrowRight,
   Sparkles,
+  LucideIcon,
 } from "lucide-react";
 
+// Type definitions
+interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speedX: number;
+  speedY: number;
+  opacity: number;
+  color: string;
+  pulse: number;
+}
+
+interface EventItem {
+  id: number;
+  title: string;
+  date: string;
+  type: string;
+  icon: React.ReactNode;
+  participants: string;
+  description: string;
+  iconBg: string;
+  tagColor: string;
+  tagBg: string;
+}
+
 // Particle System Component
-const ParticleSystem = ({ isActive = true }) => {
-  const canvasRef = useRef(null);
-  const particles = useRef([]);
-  const animationId = useRef(null);
+const ParticleSystem = ({ isActive = true }: { isActive?: boolean }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particles = useRef<Particle[]>([]);
+  const animationId = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      // Ensure minimum dimensions to avoid zero width/height
+      const width = Math.max(1, rect.width * dpr);
+      const height = Math.max(1, rect.height * dpr);
+      canvas.width = width;
+      canvas.height = height;
+      ctx.scale(dpr, dpr);
     };
 
     resizeCanvas();
@@ -31,11 +64,13 @@ const ParticleSystem = ({ isActive = true }) => {
 
     // Initialize particles
     const initParticles = () => {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
       particles.current = [];
       for (let i = 0; i < 50; i++) {
         particles.current.push({
-          x: Math.random() * canvas.offsetWidth,
-          y: Math.random() * canvas.offsetHeight,
+          x: Math.random() * rect.width,
+          y: Math.random() * rect.height,
           size: Math.random() * 3 + 1,
           speedX: (Math.random() - 0.5) * 0.5,
           speedY: (Math.random() - 0.5) * 0.5,
@@ -49,7 +84,8 @@ const ParticleSystem = ({ isActive = true }) => {
     const animate = () => {
       if (!isActive) return;
 
-      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
 
       particles.current.forEach((particle) => {
         particle.x += particle.speedX;
@@ -57,10 +93,13 @@ const ParticleSystem = ({ isActive = true }) => {
         particle.pulse += 0.02;
 
         // Wrap around edges
-        if (particle.x < 0) particle.x = canvas.offsetWidth;
-        if (particle.x > canvas.offsetWidth) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.offsetHeight;
-        if (particle.y > canvas.offsetHeight) particle.y = 0;
+        const rect = canvas?.getBoundingClientRect();
+        if (!rect) return;
+        
+        if (particle.x < 0) particle.x = rect.width;
+        if (particle.x > rect.width) particle.x = 0;
+        if (particle.y < 0) particle.y = rect.height;
+        if (particle.y > rect.height) particle.y = 0;
 
         // Draw particle with pulsing effect
         const pulseFactor = Math.sin(particle.pulse) * 0.5 + 1;
@@ -147,11 +186,22 @@ const FloatingElements = () => {
 };
 
 // Modern Event Card Component
-const EventCard = ({ event, index, onHover }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [ripples, setRipples] = useState([]);
+interface EventCardProps {
+  event: EventItem;
+  index: number;
+  onHover: (event: EventItem) => void;
+}
 
-  const handleClick = (e) => {
+const EventCard = ({ event, index, onHover }: EventCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  interface Ripple {
+    x: number;
+    y: number;
+    id: number;
+  }
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -300,14 +350,14 @@ const EventCard = ({ event, index, onHover }) => {
 
 // Main Component
 export default function ModernEventsPreview() {
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  const events = [
+  const events: EventItem[] = [
     {
       id: 1,
       title: "Hack-e-thon Series",
@@ -349,8 +399,12 @@ export default function ModernEventsPreview() {
     },
   ];
 
+  const onHover = (event: EventItem) => {
+    setSelectedEvent(event);
+  };
+
   return (
-    <div className="relative min-h-screen  overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden">
       {/* Particle System Background */}
       <ParticleSystem isActive={true} />
 
@@ -419,7 +473,7 @@ export default function ModernEventsPreview() {
               key={event.id}
               event={event}
               index={index}
-              onHover={setSelectedEvent}
+              onHover={onHover}
             />
           ))}
         </div>
