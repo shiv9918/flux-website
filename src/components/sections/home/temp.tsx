@@ -2,7 +2,6 @@
 import React from "react";
 import SectionWrapper from "@/components/SectionWrapper";
 import SectionCTA from "@/components/sectionCTA";
-import SatvikSir from "../../../assets/images/SatvikSir.jpg";// Replace
 import { GraduationCap, BookOpen, Award, Users, Lightbulb, Target, Brain, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -26,9 +25,9 @@ interface StatItem {
 }
 
 const stats: StatItem[] = [
-  { label: 'Patents', value: '20+', icon: Users, color: 'from-blue-500 to-cyan-500' },
-  { label: 'Project Based Publications', value: '75+', icon: BookOpen, color: 'from-green-500 to-emerald-500' },
-  { label: 'Books(Edited & Published)', value: '4+', icon: Award, color: 'from-purple-500 to-violet-500' }
+  { label: 'Faculty Members', value: '25+', icon: Users, color: 'from-blue-500 to-cyan-500' },
+  { label: 'Research Papers', value: '150+', icon: BookOpen, color: 'from-green-500 to-emerald-500' },
+  { label: 'Years Experience', value: '20+', icon: Award, color: 'from-purple-500 to-violet-500' }
 ];
 
 export default function FacultyPreview() {
@@ -43,12 +42,23 @@ export default function FacultyPreview() {
       name: "Dr. Satvik Vats",
       title: "Faculty Coordinator",
       department: "Computer Science",
-      image: SatvikSir, // Replace with actual image path
+      image: "/api/placeholder/150/150", // Replace with actual image path
       specialization: ["Machine Learning", "Data Science", "AI Research"],
       experience: "15+ years",
       color: "from-blue-600 via-indigo-600 to-purple-600",
       icon: Brain
     },
+    {
+      id: 2,
+      name: "Dr. Shwet Ketu",
+      title: "Associate Professor",
+      department: "Information Technology",
+      image: "/api/placeholder/150/150", // Replace with actual image path
+      specialization: ["Software Engineering", "Web Development", "Database Systems"],
+      experience: "12+ years",
+      color: "from-emerald-600 via-teal-600 to-cyan-600",
+      icon: Target
+    }
   ];
 
   useEffect(() => {
@@ -72,26 +82,17 @@ export default function FacultyPreview() {
 
   return (
     <SectionWrapper
-     
+      cta={
+        <SectionCTA to="/faculty" label="View All Faculty →" variant="primary" />
+      }
     >
       {/* Centered header section */}
-   <div className="text-center mb-16">
-  <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our Faculty</h2>
-  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-    Under the guidance of our Faculty Co-ordinator, our faculty team blends
-    expertise with dedication — shaping the minds of tomorrow through
-    innovation, research, and unwavering commitment to excellence.
-  </p>
-
-  <div className="mt-6">
-    <SectionCTA
-      to="/faculty"
-      label="View All Faculty →"
-      variant="primary"
-    />
-  </div>
-</div>
-
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our Faculty</h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Under the guidance of our Faculty Co-ordinator, our faculty team blends expertise with dedication — shaping the minds of tomorrow through innovation, research, and unwavering commitment to excellence.
+        </p>
+      </div>
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
