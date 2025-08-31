@@ -1,8 +1,7 @@
 // src/components/sections/home/Hero.tsx
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SectionCTA from "@/components/sectionCTA";
-import logo from "@/assets/images/flux-logo.png";
 
 import { Variants } from "framer-motion";
 
@@ -13,41 +12,26 @@ const textParent: Variants = {
     y: 0,
     transition: {
       delayChildren: 0.6,
-      staggerChildren: 0.12,
-      ease: [0.16, 1, 0.3, 1],
-      duration: 0.6,
+      staggerChildren: 0.08,
+      ease: "easeInOut",
+      duration: 0.4,
     },
   },
 };
 
 const textChild: Variants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 8 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.3,
+      ease: "easeInOut",
     },
   },
 };
 
-const logoEnter: Variants = {
-  hidden: { opacity: 0, y: -40, scale: 0.92 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 160,
-      damping: 18,
-      mass: 0.8,
-    },
-  },
-};
-
-// Typewriter Component
+// Enhanced Typewriter Component
 const TypewriterMotto = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
@@ -57,8 +41,8 @@ const TypewriterMotto = () => {
 
   useEffect(() => {
     const word = words[currentWordIndex];
-    const typingSpeed = isDeleting ? 50 : 100;
-    const pauseDuration = isDeleting ? 500 : 2000;
+    const typingSpeed = isDeleting ? 40 : 80;
+    const pauseDuration = isDeleting ? 400 : 1500;
 
     const timeout = setTimeout(() => {
       if (!isDeleting && currentText === word) {
@@ -78,20 +62,51 @@ const TypewriterMotto = () => {
 
   return (
     <span
-      className="relative inline-block min-w-[200px]"
+      className="relative inline-block min-w-[200px] font-mono"
       style={{
         background:
-          "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%)",
+          "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 50%, #059669 100%)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
+        backgroundSize: "200% 200%",
+        filter: "drop-shadow(0 0 15px rgba(16, 185, 129, 0.5))",
+        fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
       }}
     >
-      {currentText}
       <motion.span
-        className="inline-block w-0.5 h-12 sm:h-16 lg:h-20 bg-primary ml-2 align-middle"
-        animate={{ opacity: [0, 1, 0] }}
-        transition={{ duration: 1, repeat: Infinity }}
+        animate={{
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        style={{
+          background: "inherit",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}
+      >
+        {currentText}
+      </motion.span>
+      <motion.span
+        className="inline-block w-0.5 h-10 sm:h-12 ml-2 align-middle"
+        style={{
+          background: "linear-gradient(180deg, hsl(var(--primary)), #10b981)",
+          boxShadow: "0 0 10px hsl(var(--primary))",
+        }}
+        animate={{ 
+          opacity: [0, 1, 0],
+          scaleY: [0.8, 1, 0.8],
+        }}
+        transition={{ 
+          duration: 1, 
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
       />
     </span>
   );
@@ -99,260 +114,419 @@ const TypewriterMotto = () => {
 
 export default function Hero() {
   const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+  const [intensity, setIntensity] = useState(1);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Enhanced mouse tracking with intensity calculation
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        setMousePosition({ x, y });
+        
+        // Calculate intensity based on distance from center
+        const centerX = 50;
+        const centerY = 50;
+        const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+        const maxDistance = Math.sqrt(2500 + 2500); // diagonal distance
+        const newIntensity = 1 + (distance / maxDistance) * 2; // 1 to 3 range
+        setIntensity(newIntensity);
+      }
+    };
+
+    const section = sectionRef.current;
+    if (section) {
+      section.addEventListener('mousemove', handleMouseMove);
+      return () => section.removeEventListener('mousemove', handleMouseMove);
+    }
+  }, []);
 
   return (
-    <section className="relative min-h-[78vh] flex items-center overflow-hidden">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12 relative">
-          {/* Enhanced animated background elements */}
-          <div className="absolute inset-0 -z-20 overflow-hidden">
-            <motion.div
-              className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/30 rounded-full"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 0.8, 0.3],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-            <motion.div
-              className="absolute top-3/4 left-1/3 w-1 h-1 bg-primary/40 rounded-full"
-              animate={{
-                scale: [1, 2, 1],
-                opacity: [0.4, 0.9, 0.4],
-                rotate: [0, 180, 360],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-            />
-            <motion.div
-              className="absolute top-1/2 right-1/4 w-1.5 h-1.5 bg-primary/20 rounded-full"
-              animate={{
-                scale: [1, 1.8, 1],
-                opacity: [0.2, 0.6, 0.2],
-                y: [0, -20, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5,
-              }}
-            />
+    <section 
+      ref={sectionRef}
+      className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-background/90"
+    >
+      
+      {/* FLUX Background Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <motion.span 
+          className="text-[clamp(18rem,35vw,30rem)] font-black leading-none tracking-tighter select-none opacity-8"
+          style={{
+            background: "linear-gradient(135deg, hsl(var(--primary)), #10b981, #059669)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            backgroundSize: "200% 200%",
+            fontFamily: "'Orbitron', 'Exo 2', 'Inter', sans-serif",
+            fontWeight: 900,
+          }}
+          animate={{
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+            opacity: [0.08, 0.15, 0.08],
+            scale: [1, 1 + (intensity - 1) * 0.1, 1],
+          }}
+          transition={{
+            backgroundPosition: {
+              duration: 15,
+              repeat: Infinity,
+              ease: "linear",
+            },
+            opacity: {
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+            scale: {
+              duration: 2,
+              ease: "easeOut",
+            },
+          }}
+        >
+          FLUX
+        </motion.span>
+      </div>
 
-            {/* Additional floating particles */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-green-400/30 rounded-full"
-                style={{
-                  left: `${20 + i * 15}%`,
-                  top: `${30 + (i % 3) * 20}%`,
-                }}
-                animate={{
-                  y: [0, -30, 0],
-                  opacity: [0.2, 0.8, 0.2],
-                  scale: [0.5, 1.2, 0.5],
-                }}
-                transition={{
-                  duration: 3 + i * 0.5,
-                  repeat: Infinity,
-                  delay: i * 0.8,
-                  ease: "easeInOut",
-                }}
+      {/* Interactive Tech Grid */}
+      <div className="absolute inset-0 pointer-events-none">
+        <svg className="w-full h-full opacity-20">
+          <defs>
+            <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+              <path
+                d="M 50 0 L 0 0 0 50"
+                fill="none"
+                stroke="hsl(var(--primary))"
+                strokeWidth="0.5"
+                opacity={0.3 * intensity}
               />
-            ))}
-          </div>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </div>
 
-          {/* LEFT: Enhanced Text with typewriter effect */}
+      {/* Animated Circuit Lines */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.4 * intensity }}>
+        <defs>
+          <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#10b981" stopOpacity="0.3" />
+          </linearGradient>
+        </defs>
+        
+        {/* Dynamic circuit paths that respond to mouse */}
+        <motion.path
+          d={`M 0,${mousePosition.y * 4} Q ${mousePosition.x * 8},${mousePosition.y * 2} ${mousePosition.x * 10},${mousePosition.y * 6}`}
+          stroke="url(#circuitGradient)"
+          strokeWidth={2 * intensity}
+          fill="none"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        <motion.path
+          d={`M ${mousePosition.x * 12},0 Q ${mousePosition.x * 6},${mousePosition.y * 4} ${mousePosition.x * 14},${mousePosition.y * 8}`}
+          stroke="url(#circuitGradient)"
+          strokeWidth={1.5 * intensity}
+          fill="none"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+      </svg>
+
+      {/* Binary Code Rain */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(12)].map((_, i) => (
           <motion.div
-            variants={textParent}
-            initial="hidden"
-            animate="visible"
-            className="order-2 lg:order-1 relative"
+            key={`binary-${i}`}
+            className="absolute text-xs font-mono text-primary/30 whitespace-pre-line"
+            style={{
+              left: `${5 + i * 8}%`,
+              top: '-10%',
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+            animate={{
+              y: ['0vh', '110vh'],
+              opacity: [0, 0.6 * intensity, 0],
+            }}
+            transition={{
+              duration: 8 + i * 0.5,
+              repeat: Infinity,
+              ease: "linear",
+              delay: i * 0.8,
+            }}
           >
-            {/* Animated accent line */}
+            {Array.from({ length: 20 }, () => Math.random() > 0.5 ? '1' : '0').join('\n')}
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Interactive Particle Network */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(25)].map((_, i) => {
+          const baseX = (i % 5) * 20 + 10;
+          const baseY = Math.floor(i / 5) * 20 + 10;
+          const distanceFromMouse = Math.sqrt(
+            Math.pow(baseX - mousePosition.x, 2) + Math.pow(baseY - mousePosition.y, 2)
+          );
+          const influence = Math.max(0, 1 - distanceFromMouse / 50);
+          
+          return (
             <motion.div
-              variants={textChild}
-              className="w-16 h-1 bg-gradient-to-r from-primary to-primary/50 mb-6 rounded-full"
+              key={`particle-${i}`}
+              className="absolute w-1 h-1 bg-primary/60 rounded-full"
+              style={{
+                left: `${baseX}%`,
+                top: `${baseY}%`,
+                boxShadow: `0 0 ${5 + influence * 15}px hsl(var(--primary))`,
+              }}
               animate={{
-                width: [64, 80, 64],
-                opacity: [0.8, 1, 0.8],
+                scale: [1, 1.5 + influence * 2, 1],
+                opacity: [0.4, 0.8 + influence * 0.2, 0.4],
+                x: influence * (mousePosition.x - baseX) * 0.5,
+                y: influence * (mousePosition.y - baseY) * 0.5,
               }}
               transition={{
+                scale: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.1,
+                },
+                opacity: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.1,
+                },
+                x: { duration: 0.8, ease: "easeOut" },
+                y: { duration: 0.8, ease: "easeOut" },
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {/* Cursor Following Glow */}
+      <motion.div
+        className="absolute pointer-events-none z-0"
+        style={{
+          left: `${mousePosition.x}%`,
+          top: `${mousePosition.y}%`,
+          transform: 'translate(-50%, -50%)',
+          width: `${300 + intensity * 100}px`,
+          height: `${300 + intensity * 100}px`,
+          background: `radial-gradient(circle at center, 
+            rgba(16, 185, 129, ${0.1 * intensity}) 0%,
+            rgba(16, 185, 129, ${0.05 * intensity}) 50%,
+            transparent 70%
+          )`,
+          filter: `blur(${20 + intensity * 10}px)`,
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* Hexagonal Tech Pattern */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={`hex-${i}`}
+            className="absolute border border-primary/20"
+            style={{
+              left: `${15 + (i % 3) * 25}%`,
+              top: `${20 + Math.floor(i / 3) * 15}%`,
+              width: '40px',
+              height: '40px',
+              clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+            }}
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1 + intensity * 0.3, 1],
+              borderColor: [
+                `rgba(16, 185, 129, ${0.2 * intensity})`,
+                `rgba(16, 185, 129, ${0.6 * intensity})`,
+                `rgba(16, 185, 129, ${0.2 * intensity})`,
+              ],
+            }}
+            transition={{
+              rotate: {
+                duration: 20,
+                repeat: Infinity,
+                ease: "linear",
+              },
+              scale: {
                 duration: 3,
                 repeat: Infinity,
                 ease: "easeInOut",
-              }}
-            />
-
-            <motion.div variants={textChild} className="relative">
-              <h1 className="text-[clamp(2.2rem,6vw,4rem)] font-black leading-[0.9] tracking-tight mb-2">
-                <motion.span
-                  className="block"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                  animate={{
-                    textShadow: [
-                      "0 0 0px transparent",
-                      "0 0 10px rgba(255,255,255,0.3)",
-                      "0 0 0px transparent",
-                    ],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <TypewriterMotto />
-                </motion.span>
-              </h1>
-            </motion.div>
-
-            {/* Floating subtitle */}
-            <motion.div
-              variants={textChild}
-              className="relative mb-6"
-              animate={{
-                y: [0, -5, 0],
-                opacity: [0.8, 1, 0.8],
-              }}
-              transition={{
-                duration: 4,
+                delay: i * 0.2,
+              },
+              borderColor: {
+                duration: 2,
                 repeat: Infinity,
                 ease: "easeInOut",
+                delay: i * 0.1,
+              },
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Code Snippets Floating */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {['<div>', '{code}', 'func()', '&&', '||', '==='].map((code, i) => (
+          <motion.div
+            key={`code-${i}`}
+            className="absolute text-xs font-mono text-primary/25"
+            style={{
+              left: `${10 + i * 15}%`,
+              top: `${30 + (i % 2) * 40}%`,
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+            animate={{
+              y: [0, -20, 0],
+              opacity: [0.3, 0.7 * intensity, 0.3],
+              rotate: [-5, 5, -5],
+            }}
+            transition={{
+              duration: 4 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.8,
+            }}
+          >
+            {code}
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Glitch Effect Overlay */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(16, 185, 129, ${0.05 * intensity}) 48%, 
+            rgba(16, 185, 129, ${0.1 * intensity}) 50%, 
+            rgba(16, 185, 129, ${0.05 * intensity}) 52%, 
+            transparent 100%
+          )`,
+          transform: `translateX(${mousePosition.x - 50}px)`,
+        }}
+        animate={{
+          opacity: [0, 0.3, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-20 text-center max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          variants={textParent}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+          
+          {/* Main Heading */}
+          <motion.div variants={textChild} className="space-y-3">
+            <h1 
+              className="text-[clamp(3rem,7vw,5rem)] font-black leading-[0.9] tracking-tight text-white"
+              style={{
+                fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
               }}
             >
-              <motion.h2
-                className="text-[clamp(1.8rem,5vw,3.2rem)] font-bold leading-tight tracking-tight"
+              <TypewriterMotto />
+            </h1>
+
+            <motion.h2
+              className="text-[clamp(1.8rem,5vw,3rem)] font-bold leading-tight tracking-tight"
+              style={{
+                fontFamily: "'Inter', 'Segoe UI', 'Roboto', sans-serif",
+              }}
+              animate={{ y: [0, -3, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="text-gray-100 mr-3">Igniting Ideas,</span>
+              <motion.span
                 style={{
-                  background:
-                    "linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)",
+                  background: "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 50%, #059669 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
+                  backgroundSize: "200% 200%",
+                  filter: "drop-shadow(0 0 20px rgba(16, 185, 129, 0.5))",
+                  fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+                  fontWeight: 700,
+                }}
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
                 }}
               >
-                <motion.span
-                  animate={{
-                    textShadow: [
-                      "0 0 0px transparent",
-                      "0 0 8px hsl(var(--primary)/0.3)",
-                      "0 0 0px transparent",
-                    ],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  Igniting Ideas,
-                </motion.span>{" "}
-                <span
-                  className="relative"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.7) 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Shaping Futures
-                </span>
-              </motion.h2>
-            </motion.div>
+                Shaping Futures
+              </motion.span>
+            </motion.h2>
+          </motion.div>
 
-            {/* Enhanced description with pulsing elements */}
-            <motion.div variants={textChild} className="space-y-4 mb-8">
-              <div className="relative">
-                <p className="text-lg text-muted-foreground/90 leading-relaxed max-w-xl">
-                  <motion.span
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    🚀
-                  </motion.span>{" "}
-                  <strong>Unleashing Innovation</strong> in Computer Science &
-                  Engineering
-                </p>
-                <p className="text-base text-muted-foreground/80 leading-relaxed max-w-xl mt-3">
-                  Join{" "}
-                  <strong className="text-primary font-semibold">FLUX</strong> –
-                  where brilliant minds converge to push the boundaries of
-                  technology, foster groundbreaking research, and build the
-                  future of computing.
-                </p>
-              </div>
-
-              {/* Animated feature tags */}
-              <motion.div
-                className="flex items-center space-x-4 text-sm text-muted-foreground/70 pt-2"
-                variants={textChild}
-              >
-                <motion.div
-                  className="flex items-center space-x-1"
-                  animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: 0 }}
-                >
-                  <motion.div
-                    className="w-2 h-2 bg-primary/60 rounded-full"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  <span>Innovation Hub</span>
-                </motion.div>
-                <motion.div
-                  className="flex items-center space-x-1"
-                  animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: 0.3 }}
-                >
-                  <motion.div
-                    className="w-2 h-2 bg-primary/60 rounded-full"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-                  />
-                  <span>Research Excellence</span>
-                </motion.div>
-                <motion.div
-                  className="flex items-center space-x-1"
-                  animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: 0.6 }}
-                >
-                  <motion.div
-                    className="w-2 h-2 bg-primary/60 rounded-full"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
-                  />
-                  <span>Future Tech</span>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-
-            {/* Animated CTA buttons with color loading loops */}
-            <motion.div variants={textChild} className="flex flex-wrap gap-4">
-              <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative overflow-hidden rounded-lg"
+          {/* Description */}
+          <motion.div variants={textChild} className="space-y-4 max-w-4xl mx-auto">
+            <p 
+              className="text-lg text-gray-200 leading-relaxed font-medium"
+              style={{
+                fontFamily: "'Inter', 'Segoe UI', sans-serif",
+              }}
+            >
+              <span className="text-xl mr-2">🚀</span>
+              <strong 
                 style={{
-                  background:
-                    "linear-gradient(45deg, hsl(var(--primary)), hsl(var(--primary)/0.8), hsl(var(--primary)))",
-                  backgroundSize: "300% 300%",
+                  background: "linear-gradient(135deg, hsl(var(--primary)), #10b981)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+                }}
+              >
+                Unleashing Innovation
+              </strong> in Computer Science & Engineering
+            </p>
+            
+            <p 
+              className="text-base text-gray-300 leading-relaxed max-w-3xl mx-auto"
+              style={{
+                fontFamily: "'Inter', 'Segoe UI', sans-serif",
+              }}
+            >
+              Join{" "}
+              <motion.strong 
+                className="font-bold text-xl"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  backgroundSize: "200% 100%",
+                  filter: "drop-shadow(0 0 15px rgba(16, 185, 129, 0.4))",
+                  fontFamily: "'JetBrains Mono', monospace",
                 }}
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -360,275 +534,127 @@ export default function Hero() {
                 transition={{
                   duration: 3,
                   repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <SectionCTA
-                  to="about"
-                  label="🔥 Explore FLUX"
-                  variant="primary"
-                />
-              </motion.div>
-
-              <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative overflow-hidden rounded-lg"
-                style={{
-                  background:
-                    "linear-gradient(45deg, transparent, hsl(var(--primary)/0.3), transparent)",
-                  backgroundSize: "300% 300%",
-                  border: "1px solid hsl(var(--primary)/0.5)",
-                }}
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                  borderColor: [
-                    "hsl(var(--primary)/0.3)",
-                    "hsl(var(--primary)/0.8)",
-                    "hsl(var(--primary)/0.3)",
-                  ],
-                }}
-                transition={{
-                  backgroundPosition: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  },
-                  borderColor: {
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  },
-                }}
-              >
-                <SectionCTA
-                  to="events"
-                  label="⚡ Upcoming Events"
-                  variant="outline"
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* Interactive scrolling tagline */}
-            <motion.div
-              variants={textChild}
-              className="mt-8 pt-6 border-t border-muted/20 overflow-hidden"
-              onHoverStart={() => setIsHovered(true)}
-              onHoverEnd={() => setIsHovered(false)}
-            >
-              <motion.div
-                className="whitespace-nowrap text-sm text-muted-foreground/50 cursor-pointer"
-                animate={{
-                  x: [0, -100],
-                }}
-                transition={{
-                  duration: isHovered ? 25 : 8,
-                  repeat: Infinity,
                   ease: "linear",
                 }}
               >
-                <span className="mr-8">
-                  Future Leaders of Unbound Experiments
+                FLUX
+              </motion.strong>{" "}
+              – where brilliant minds converge to push the boundaries of
+              technology, foster groundbreaking research, and build the
+              future of computing.
+            </p>
+
+            {/* Feature Tags */}
+            <div className="flex flex-wrap justify-center items-center gap-4 pt-3">
+              {[
+                "Innovation Hub",
+                "Research Excellence", 
+                "Future Tech"
+              ].map((label, i) => (
+                <motion.div
+                  key={label}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 backdrop-blur-sm"
+                  animate={{ 
+                    y: [0, -3, 0],
+                    borderColor: [
+                      "rgba(16, 185, 129, 0.4)",
+                      "rgba(16, 185, 129, 0.7)",
+                      "rgba(16, 185, 129, 0.4)",
+                    ],
+                  }}
+                  transition={{ 
+                    y: { duration: 4, repeat: Infinity, delay: i * 0.3 },
+                    borderColor: { duration: 3, repeat: Infinity, delay: i * 0.3 },
+                  }}
+                >
+                  <div
+                    className="w-2 h-2 rounded-full bg-primary"
+                    style={{ boxShadow: "0 0 8px hsl(var(--primary))" }}
+                  />
+                  <span 
+                    className="text-gray-300 font-medium text-sm"
+                    style={{
+                      fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+                    }}
+                  >
+                    {label}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* CTA Buttons */}
+          <motion.div variants={textChild} className="flex flex-wrap justify-center gap-4 pt-4">
+            <motion.div
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className="rounded-lg overflow-hidden"
+              style={{
+                background: "linear-gradient(45deg, hsl(var(--primary)), #10b981)",
+                boxShadow: "0 0 20px rgba(16, 185, 129, 0.4)",
+              }}
+            >
+              <div className="px-6 py-3">
+                <span 
+                  className="text-white font-semibold"
+                  style={{
+                    fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+                  }}
+                >
+                  🔥 Explore FLUX
                 </span>
-                <span className="mr-8">Innovation • Research • Excellence</span>
-                <span className="mr-8">Building Tomorrow's Technology</span>
-                <span className="mr-8">Computer Science & Engineering</span>
-                <span className="mr-8">MMMUT Gorakhpur</span>
-                <span className="mr-8">
-                  Future Leaders of Unbound Experiments
-                </span>
-                <span className="mr-8">Innovation • Research • Excellence</span>
-              </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className="rounded-lg border-2 border-primary/50 bg-primary/10 backdrop-blur-sm overflow-hidden px-6 py-3"
+              style={{
+                boxShadow: "0 0 15px rgba(16, 185, 129, 0.2)",
+              }}
+            >
+              <span 
+                className="text-gray-300 font-semibold"
+                style={{
+                  fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+                }}
+              >
+                ⚡ Upcoming Events
+              </span>
             </motion.div>
           </motion.div>
 
-          {/* RIGHT: Fully blended logo with background integration */}
-          <div className="relative order-1 lg:order-2 flex justify-center lg:justify-end">
-            {/* Seamlessly integrated background layers */}
-            <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center lg:justify-end">
-              {/* Base ambient glow */}
-              <motion.div
-                className="h-[32rem] w-[32rem] rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, rgba(34, 197, 94, 0.06) 30%, rgba(16, 185, 129, 0.04) 60%, transparent 100%)",
-                  filter: "blur(60px)",
-                }}
-                animate={{
-                  scale: [0.8, 1.2, 0.8],
-                  opacity: [0.6, 0.9, 0.6],
-                }}
-                transition={{
-                  duration: 12,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-
-              {/* Secondary glow layer */}
-              <motion.div
-                className="absolute h-80 w-80 rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(circle at center, rgba(34, 197, 94, 0.12) 0%, rgba(16, 185, 129, 0.08) 50%, transparent 100%)",
-                  filter: "blur(40px)",
-                }}
-                animate={{
-                  scale: [1.1, 0.9, 1.1],
-                  opacity: [0.4, 0.7, 0.4],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 2,
-                }}
-              />
-            </div>
-
+          {/* Tagline */}
+          <motion.div
+            variants={textChild}
+            className="pt-4 overflow-hidden"
+            onHoverStart={() => setIsHovered(true)}
+            onHoverEnd={() => setIsHovered(false)}
+          >
             <motion.div
-              variants={logoEnter}
-              initial="hidden"
-              animate="visible"
-              className="relative"
+              className="whitespace-nowrap text-sm font-medium text-gray-500"
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+              animate={{ x: [0, -100] }}
+              transition={{
+                duration: isHovered ? 30 : 12,
+                repeat: Infinity,
+                ease: "linear",
+              }}
             >
-              {/* Integrated logo with seamless background blending */}
-              <div className="relative">
-                <motion.img
-                  src={logo}
-                  alt="Flux Society Logo"
-                  width={320}
-                  height={320}
-                  decoding="async"
-                  fetchPriority="high"
-                  className="w-72 sm:w-80 h-auto object-contain relative z-10"
-                  style={{
-                    filter: "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))",
-                    mixBlendMode: "normal",
-                  }}
-                  animate={{
-                    y: [0, -15, 0],
-                    rotate: [0, 3, -3, 0],
-                    filter: [
-                      "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))",
-                      "drop-shadow(0 0 50px rgba(16, 185, 129, 0.6))",
-                      "drop-shadow(0 0 30px rgba(16, 185, 129, 0.4))",
-                    ],
-                  }}
-                  transition={{
-                    delay: 0.9,
-                    duration: 7,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-
-                {/* Seamlessly blended circular gradients behind logo */}
-                <div className="absolute inset-0 -z-10">
-                  <motion.div
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      width: "140%",
-                      height: "140%",
-                      top: "-20%",
-                      left: "-20%",
-                      background: `
-                        conic-gradient(from 0deg at 50% 50%, 
-                          rgba(16, 185, 129, 0.15) 0deg, 
-                          rgba(34, 197, 94, 0.25) 120deg, 
-                          rgba(16, 185, 129, 0.15) 240deg, 
-                          rgba(34, 197, 94, 0.2) 360deg
-                        )
-                      `,
-                      filter: "blur(8px)",
-                    }}
-                    animate={{
-                      rotate: 360,
-                      scale: [1, 1.15, 1],
-                    }}
-                    transition={{
-                      rotate: {
-                        duration: 18,
-                        repeat: Infinity,
-                        ease: "linear",
-                      },
-                      scale: {
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                    }}
-                  />
-
-                  <motion.div
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      width: "170%",
-                      height: "170%",
-                      top: "-35%",
-                      left: "-35%",
-                      background: `
-                        conic-gradient(from 180deg at 50% 50%, 
-                          rgba(34, 197, 94, 0.08) 0deg, 
-                          rgba(16, 185, 129, 0.18) 90deg,
-                          rgba(34, 197, 94, 0.12) 180deg, 
-                          rgba(16, 185, 129, 0.08) 270deg,
-                          rgba(34, 197, 94, 0.08) 360deg
-                        )
-                      `,
-                      filter: "blur(12px)",
-                    }}
-                    animate={{
-                      rotate: -360,
-                      scale: [1, 1.08, 1],
-                    }}
-                    transition={{
-                      rotate: {
-                        duration: 25,
-                        repeat: Infinity,
-                        ease: "linear",
-                      },
-                      scale: {
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1,
-                      },
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Enhanced orbiting particles that blend with background */}
-              <div className="absolute inset-0 pointer-events-none">
-                {[...Array(16)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-0.5 h-0.5 bg-green-400/60 rounded-full"
-                    style={{
-                      left: "50%",
-                      top: "50%",
-                    }}
-                    animate={{
-                      x: [0, Math.cos((i * Math.PI * 2) / 16) * 140],
-                      y: [0, Math.sin((i * Math.PI * 2) / 16) * 140],
-                      opacity: [0, 0.8, 0],
-                      scale: [0, 2, 0],
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      delay: i * 0.15,
-                      ease: "easeOut",
-                    }}
-                  />
-                ))}
-              </div>
+              <span className="mr-8 font-bold text-gray-400">Future Leaders of Unbound Experiments</span>
+              <span className="mr-8">Innovation • Research • Excellence</span>
+              <span className="mr-8">Building Tomorrow's Technology</span>
+              <span className="mr-8">Computer Science & Engineering</span>
+              <span className="mr-8 font-bold text-primary">MMMUT Gorakhpur</span>
             </motion.div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
 }
+//fixed
