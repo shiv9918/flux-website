@@ -1,5 +1,6 @@
 // src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
+import Dots from "react-animated-dots";
 import { Link, useLocation } from "react-router-dom";
 import { SiGmail } from "react-icons/si";
 import { FaWhatsapp, FaInstagram, FaBars, FaTimes } from "react-icons/fa";
@@ -12,14 +13,16 @@ const Navbar: React.FC = () => {
   const [lastScrollY, setLastScrollY] = useState<number>(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const location = useLocation();
-//fixed
+  //fixed
   // Array of links with paths
   const navLinks = [
     { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
     { name: "Faculty", path: "/faculty" },
     { name: "Our Team", path: "/team" },
     { name: "Events", path: "/events" },
     { name: "Contact", path: "/contact" },
+    { name: "Induction", path: "/join" },
   ];
 
   // Detect scroll direction
@@ -53,7 +56,12 @@ const Navbar: React.FC = () => {
       <div className="fixed top-0 left-0 w-full h-20 pointer-events-none z-40">
         <svg className="w-full h-full opacity-5">
           <defs>
-            <pattern id="navGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <pattern
+              id="navGrid"
+              width="40"
+              height="40"
+              patternUnits="userSpaceOnUse"
+            >
               <path
                 d="M 40 0 L 0 0 0 40"
                 fill="none"
@@ -68,7 +76,9 @@ const Navbar: React.FC = () => {
 
       <motion.nav
         className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ${
-          showNavbar ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+          showNavbar
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-full"
         }`}
         style={{
           background: `
@@ -80,7 +90,8 @@ const Navbar: React.FC = () => {
           `,
           backdropFilter: "blur(15px)",
           borderBottom: "1px solid rgba(16, 185, 129, 0.15)",
-          boxShadow: "0 2px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(16, 185, 129, 0.05)",
+          boxShadow:
+            "0 2px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(16, 185, 129, 0.05)",
         }}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -89,9 +100,10 @@ const Navbar: React.FC = () => {
         {/* Subtle Animated Circuit Line */}
         <motion.div
           className="absolute top-0 left-0 h-0.5 opacity-60"
-          style={{ 
+          style={{
             width: "100%",
-            background: "linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.6) 50%, transparent 100%)"
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.6) 50%, transparent 100%)",
           }}
           animate={{
             background: [
@@ -108,7 +120,6 @@ const Navbar: React.FC = () => {
         />
 
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          
           {/* Clean Logo without Circle */}
           <Link to="/" className="flex items-center gap-3 cursor-pointer group">
             <motion.img
@@ -132,13 +143,14 @@ const Navbar: React.FC = () => {
               }}
               whileHover={{ scale: 1.1 }}
             />
-            
+
             {/* FLUX Text - Now Visible */}
             <motion.span
               className="text-2xl font-black tracking-wide text-white"
               style={{
                 fontFamily: "'Orbitron', 'Space Grotesk', sans-serif",
-                textShadow: "0 0 10px rgba(16, 185, 129, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.8)",
+                textShadow:
+                  "0 0 10px rgba(16, 185, 129, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.8)",
                 filter: "drop-shadow(0 0 8px rgba(16, 185, 129, 0.3))",
               }}
               animate={{
@@ -159,7 +171,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* Enhanced Desktop Links */}
-          <ul 
+          <ul
             className="hidden md:flex gap-8 text-sm font-semibold tracking-wider uppercase"
             style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
           >
@@ -173,26 +185,34 @@ const Navbar: React.FC = () => {
               >
                 <Link
                   to={link.path}
-                  className={`relative z-10 transition-colors duration-300 ${
+                  className={`relative z-10 transition-colors duration-300 flex items-center gap-2 ${
                     location.pathname === link.path
                       ? "text-primary"
                       : "text-gray-300/90 hover:text-white"
                   }`}
                 >
                   {link.name}
-                  
-                  {/* Active Indicator */}
-                  {location.pathname === link.path && (
-                    <motion.div
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary/80"
-                      layoutId="activeTab"
-                      style={{
-                        boxShadow: "0 0 8px rgba(16, 185, 129, 0.6)",
-                      }}
-                    />
+
+                  {/* ✅ Only show blinking dot for Induction */}
+                  {link.name === "Induction" && (
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-90 scale-125"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-300 shadow-[0_0_6px_rgba(34,197,94,0.9)]"></span>
+                    </span>
                   )}
                 </Link>
-                
+
+                {/* Active Indicator */}
+                {location.pathname === link.path && (
+                  <motion.div
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary/80"
+                    layoutId="activeTab"
+                    style={{
+                      boxShadow: "0 0 8px rgba(16, 185, 129, 0.6)",
+                    }}
+                  />
+                )}
+
                 {/* Hover Effect */}
                 <motion.span
                   className="absolute left-0 -bottom-1 h-0.5 bg-gradient-to-r from-primary/70 to-green-400/70"
@@ -203,14 +223,6 @@ const Navbar: React.FC = () => {
                     boxShadow: "0 0 6px rgba(16, 185, 129, 0.4)",
                   }}
                 />
-                
-                {/* Subtle Glitch Effect on Hover */}
-                <motion.div
-                  className="absolute inset-0 bg-primary/3 -z-10 rounded"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileHover={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2 }}
-                />
               </motion.li>
             ))}
           </ul>
@@ -218,44 +230,56 @@ const Navbar: React.FC = () => {
           {/* Enhanced Right Section */}
           <div className="hidden md:flex items-center gap-6">
             {/* Social Icons with Subtle Tech Effects */}
-           <div className="flex items-center gap-4">
-  {[
-    { Icon: SiGmail, color: "#1877F2", link: "mailto:flux@mmmut.ac.in" },
-    { Icon: FaWhatsapp, color: "#0A66C2", link: "https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq" },
-    { Icon: FaInstagram, color: "#E4405F", link: "https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2" },
-  ].map(({ Icon, color, link }, i) => (
-    <motion.a
-      key={i}
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="relative group cursor-pointer"
-      whileHover={{ scale: 1.2, rotate: 5 }}
-      whileTap={{ scale: 0.9 }}
-    >
-      <Icon
-        className="text-gray-400/80 group-hover:text-primary transition-colors duration-300 relative z-10"
-        size={20}
-      />
+            <div className="flex items-center gap-4">
+              {[
+                {
+                  Icon: SiGmail,
+                  color: "#1877F2",
+                  link: "mailto:flux@mmmut.ac.in",
+                },
+                {
+                  Icon: FaWhatsapp,
+                  color: "#0A66C2",
+                  link: "https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq",
+                },
+                {
+                  Icon: FaInstagram,
+                  color: "#E4405F",
+                  link: "https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2",
+                },
+              ].map(({ Icon, color, link }, i) => (
+                <motion.a
+                  key={i}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative group cursor-pointer"
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Icon
+                    className="text-gray-400/80 group-hover:text-primary transition-colors duration-300 relative z-10"
+                    size={20}
+                  />
 
-      {/* Subtle Hexagonal Background */}
-      <motion.div
-        className="absolute inset-0 bg-primary/5 -z-10"
-        style={{
-          clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-          width: "130%",
-          height: "130%",
-          top: "-15%",
-          left: "-15%",
-        }}
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1, rotate: 180 }}
-        transition={{ duration: 0.3 }}
-      />
-    </motion.a>
-  ))}
-</div>
-
+                  {/* Subtle Hexagonal Background */}
+                  <motion.div
+                    className="absolute inset-0 bg-primary/5 -z-10"
+                    style={{
+                      clipPath:
+                        "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+                      width: "130%",
+                      height: "130%",
+                      top: "-15%",
+                      left: "-15%",
+                    }}
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1, rotate: 180 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </motion.a>
+              ))}
+            </div>
 
             {/* Transparent CTA Button */}
             <motion.button
@@ -267,7 +291,7 @@ const Navbar: React.FC = () => {
                 backdropFilter: "blur(10px)",
                 color: "#10b981",
               }}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
                 boxShadow: "0 0 25px rgba(16, 185, 129, 0.3)",
                 background: "rgba(16, 185, 129, 0.2)",
@@ -283,7 +307,7 @@ const Navbar: React.FC = () => {
                   →
                 </motion.span>
               </span>
-              
+
               {/* Button Glow Effect */}
               <motion.div
                 className="absolute inset-0 bg-white/10"
@@ -360,7 +384,7 @@ const Navbar: React.FC = () => {
                 </Link>
               </motion.div>
             ))}
-            
+
             {/* Mobile Social Icons */}
             <motion.div
               className="flex gap-6 mt-6 pt-4 border-t border-primary/15 justify-center"
