@@ -80,7 +80,7 @@ const Index = () => {
                 </Button>
               </Link>
               
-              <div className="flex flex-wrap justify-center gap-2">
+              {/* <div className="flex flex-wrap justify-center gap-2">
                 <Badge variant="secondary" className="px-3 py-1">
                   <Star className="w-3 h-3 mr-1" />
                   50+ Members
@@ -89,7 +89,7 @@ const Index = () => {
                   <Rocket className="w-3 h-3 mr-1" />
                   25+ Projects
                 </Badge>
-              </div>
+              </div> */}
             </div>
           </div>
 

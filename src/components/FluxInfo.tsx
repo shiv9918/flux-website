@@ -26,12 +26,12 @@ export const FluxInfo = () => {
     }
   ];
 
-  const achievements = [
-    "50+ Active Members",
-    "25+ Projects Completed",
-    "10+ Hackathon Wins",
-    "100% Placement Rate"
-  ];
+  // const achievements = [
+  //   "50+ Active Members",
+  //   "25+ Projects Completed",
+  //   "10+ Hackathon Wins",
+  //   "100% Placement Rate"
+  // ];
 
   return (
     <div className="space-y-8">
@@ -51,14 +51,14 @@ export const FluxInfo = () => {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2">
+        {/* <div className="flex flex-wrap justify-center gap-2">
           {achievements.map((achievement, index) => (
             <Badge key={index} variant="secondary" className="px-3 py-1">
               <Star className="w-3 h-3 mr-1" />
               {achievement}
             </Badge>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* About FLUX */}
