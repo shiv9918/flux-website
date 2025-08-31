@@ -1,6 +1,7 @@
 import { useState } from "react"
 import type { ChangeEvent } from "react"
-import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa"
+import {  FaWhatsapp, FaInstagram } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
 import SectionWrapper from "../SectionWrapper"
 
 type Testimonial = {
@@ -107,13 +108,35 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-700 pt-6 text-gray-400 text-sm">
-            <p>© {new Date().getFullYear()} WebFlux. All rights reserved.</p>
-            <div className="flex gap-4 text-lg mt-4 md:mt-0">
-              <FaFacebook className="hover:text-emerald-400 cursor-pointer transition-colors duration-300" />
-              <FaLinkedin className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
-              <FaInstagram className="hover:text-pink-400 cursor-pointer transition-colors duration-300" />
-            </div>
-          </div>
+  <p>© {new Date().getFullYear()} WebFlux. All rights reserved.</p>
+  
+  <div className="flex gap-4 text-lg mt-4 md:mt-0">
+    <a 
+      href="flux@mmmut.ac.in" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <SiGmail className="hover:text-emerald-400 cursor-pointer transition-colors duration-300" />
+    </a>
+
+    <a 
+      href="https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <FaWhatsapp className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
+    </a>
+
+    <a 
+      href="https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <FaInstagram className="hover:text-pink-400 cursor-pointer transition-colors duration-300" />
+    </a>
+  </div>
+</div>
+
         </div>
       </footer>
     </SectionWrapper>

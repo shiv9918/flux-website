@@ -1,7 +1,8 @@
 // src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaFacebook, FaLinkedin, FaInstagram, FaBars, FaTimes } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
+import { FaWhatsapp, FaInstagram, FaBars, FaTimes } from "react-icons/fa";
 import { motion } from "framer-motion";
 import logo from "@/assets/images/flux_logo.png"; // Updated logo path
 
@@ -217,40 +218,44 @@ const Navbar: React.FC = () => {
           {/* Enhanced Right Section */}
           <div className="hidden md:flex items-center gap-6">
             {/* Social Icons with Subtle Tech Effects */}
-            <div className="flex items-center gap-4">
-              {[
-                { Icon: FaFacebook, color: "#1877F2" },
-                { Icon: FaLinkedin, color: "#0A66C2" },
-                { Icon: FaInstagram, color: "#E4405F" },
-              ].map(({ Icon, color }, i) => (
-                <motion.div
-                  key={i}
-                  className="relative group cursor-pointer"
-                  whileHover={{ scale: 1.2, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Icon
-                    className="text-gray-400/80 group-hover:text-primary transition-colors duration-300 relative z-10"
-                    size={20}
-                  />
-                  
-                  {/* Subtle Hexagonal Background */}
-                  <motion.div
-                    className="absolute inset-0 bg-primary/5 -z-10"
-                    style={{
-                      clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-                      width: "130%",
-                      height: "130%",
-                      top: "-15%",
-                      left: "-15%",
-                    }}
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1, rotate: 180 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.div>
-              ))}
-            </div>
+           <div className="flex items-center gap-4">
+  {[
+    { Icon: SiGmail, color: "#1877F2", link: "mailto:flux@mmmut.ac.in" },
+    { Icon: FaWhatsapp, color: "#0A66C2", link: "https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq" },
+    { Icon: FaInstagram, color: "#E4405F", link: "https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2" },
+  ].map(({ Icon, color, link }, i) => (
+    <motion.a
+      key={i}
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative group cursor-pointer"
+      whileHover={{ scale: 1.2, rotate: 5 }}
+      whileTap={{ scale: 0.9 }}
+    >
+      <Icon
+        className="text-gray-400/80 group-hover:text-primary transition-colors duration-300 relative z-10"
+        size={20}
+      />
+
+      {/* Subtle Hexagonal Background */}
+      <motion.div
+        className="absolute inset-0 bg-primary/5 -z-10"
+        style={{
+          clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+          width: "130%",
+          height: "130%",
+          top: "-15%",
+          left: "-15%",
+        }}
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1, rotate: 180 }}
+        transition={{ duration: 0.3 }}
+      />
+    </motion.a>
+  ))}
+</div>
+
 
             {/* Transparent CTA Button */}
             <motion.button
@@ -363,7 +368,7 @@ const Navbar: React.FC = () => {
               animate={{ opacity: isOpen ? 1 : 0 }}
               transition={{ delay: 0.5, duration: 0.3 }}
             >
-              {[FaFacebook, FaLinkedin, FaInstagram].map((Icon, i) => (
+              {[SiGmail, FaWhatsapp, FaInstagram].map((Icon, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ scale: 1.2 }}

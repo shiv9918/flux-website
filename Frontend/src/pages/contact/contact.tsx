@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { SiGmail } from "react-icons/si";
+import { FaWhatsapp, FaInstagram } from "react-icons/fa";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -137,8 +139,8 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-medium">Phone Number</h3>
-                    <p className="text-purple-200">+1 (555) 123-4567</p>
+                    <h3 className="text-lg font-medium">Insta handle</h3>
+                    <p className="text-purple-200">flux.mmmut</p>
                   </div>
                 </div>
 
@@ -150,7 +152,7 @@ export default function Contact() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium">Email Address</h3>
-                    <p className="text-purple-200">contact@example.com</p>
+                    <p className="text-purple-200"> flux@mmmut.ac.in</p>
                   </div>
                 </div>
 
@@ -170,18 +172,24 @@ export default function Contact() {
               <div className="mt-12">
                 <h3 className="text-lg font-medium mb-4">Connect With Us</h3>
                 <div className="flex space-x-4">
-                  {['twitter', 'facebook', 'instagram', 'linkedin', 'github'].map((social) => (
-                    <a
-                      key={social}
-                      href="#"
-                      className="h-12 w-12 rounded-full bg-purple-700 flex items-center justify-center hover:bg-purple-600 transition-colors duration-300"
-                      aria-label={social}
-                    >
-                      <span className="sr-only">{social}</span>
-                      <div className="h-6 w-6 bg-white rounded-full opacity-70"></div>
-                    </a>
-                  ))}
-                </div>
+  {[
+    { name: "gmail", Icon: SiGmail, link: "mailto:flux@mmmut.ac.in" },
+    { name: "whatsapp", Icon: FaWhatsapp, link: "https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq" },
+    { name: "instagram", Icon: FaInstagram, link: "https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2" },
+  ].map(({ name, Icon, link }) => (
+    <a
+      key={name}
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="h-12 w-12 rounded-full bg-purple-700 flex items-center justify-center hover:bg-purple-600 transition-colors duration-300"
+      aria-label={name}
+    >
+      <span className="sr-only">{name}</span>
+      <Icon className="h-6 w-6 text-white" />
+    </a>
+  ))}
+</div>
               </div>
             </div>
 
