@@ -1,6 +1,6 @@
 // src/components/Navbar.tsx
 import React, { useState, useEffect } from "react";
-import Dots from "react-animated-dots";
+
 import { Link, useLocation } from "react-router-dom";
 import { SiGmail } from "react-icons/si";
 import { FaWhatsapp, FaInstagram, FaBars, FaTimes } from "react-icons/fa";

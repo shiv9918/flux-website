@@ -1,435 +1,481 @@
-import React, { useState, useMemo } from 'react';
-import { motion, Variants } from 'framer-motion';
-import { Mail, Phone, Linkedin, Twitter, ExternalLink, ChevronRight, LucideIcon } from 'lucide-react';
-import type { Faculty } from '@/types';
+import React from 'react';
+import { Mail, Linkedin, Globe } from 'lucide-react';
 
-// Define social link type for better type safety
-interface SocialLink {
-  icon: LucideIcon;
-  href: string;
-  label: string;
+export interface FacultyMember {
+  id: number;
+  name: string;
+  title: string;
+  department: string;
+  specialization: string[];
+  email: string;
+  phone: string;
+  profileImage: string;
+  description: string;
+  publications?: number;
+  experience?: number;
+  citations?: number;
+  skills?: number;
+  linkedinUrl?: string;
+  websiteUrl?: string;
+  googleScholarUrl?: string;
+  // Additional fields for the new data
+  patents?: string;
+  projectPublications?: string;
+  booksPublished?: string;
+  internationalPublications?: string;
+  organisations?: string;
+  internationalConferences?: string;
+  articles?: string;
+  areasOfExpertise?: string; // New field for Shantanu Shahi
 }
 
-// Extend FacultyCardProps with additional type safety
 interface FacultyCardProps {
-  faculty: Faculty;
-  index: number;
+  faculty: FacultyMember;
 }
 
-// Animation variants for better performance
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-      type: 'spring',
-      stiffness: 100
-    }
-  })
-};
-
-// Department color mapping
-const DEPARTMENT_COLORS: Record<string, string> = {
-  'Computer Science': 'from-blue-400 to-blue-600',
-  'Computer Science & Engineering': 'from-blue-400 to-blue-600',
-  'Computer Science and Engineering': 'from-blue-400 to-blue-600',
-  'Mathematics': 'from-green-400 to-green-600',
-  'Physics': 'from-purple-400 to-purple-600',
-  'Biology': 'from-emerald-400 to-emerald-600',
-  'Chemistry': 'from-orange-400 to-orange-600',
-  'Psychology': 'from-pink-400 to-pink-600',
-  'default': 'from-gray-400 to-gray-600'
-};
-
-/**
- * Individual faculty card component with flip animation
- * Features 3D effects, hover interactions, and detailed information reveal
- */
-const FacultyCard: React.FC<FacultyCardProps> = React.memo(({ faculty, index }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const handleMouseLeave = () => {
-    setIsFlipped(false);
-  };
-
-  const handleMouseEnter = () => {
-    setIsFlipped(true);
-  };
-
-  const getDepartmentColor = (department: string): string => {
-    return DEPARTMENT_COLORS[department] || DEPARTMENT_COLORS.default;
-  };
-
-  // Memoize social icons to prevent unnecessary re-renders
-  const socialIcons: SocialLink[] = useMemo(() => [
-    ...(faculty.socialLinks?.linkedin ? [{
-      icon: Linkedin,
-      href: faculty.socialLinks.linkedin,
-      label: 'LinkedIn Profile'
-    }] : []),
-    ...(faculty.socialLinks?.twitter ? [{
-      icon: Twitter,
-      href: faculty.socialLinks.twitter,
-      label: 'Twitter Profile'
-    }] : []),
-    ...(faculty.socialLinks?.researchGate ? [{
-      icon: ExternalLink,
-      href: faculty.socialLinks.researchGate,
-      label: 'ResearchGate Profile'
-    }] : [])
-  ], [faculty.socialLinks]);
-
-  // Animation variants for card flip
-  const flipVariants = {
-    front: { rotateY: 0 },
-    back: { rotateY: 180 }
-  };
-
-  const flipTransition: Record<string, any> = {
-    duration: 0.8,
-    type: 'spring' as const,
-    stiffness: 100,
-    damping: 20
-  };
-
+const FacultyCard: React.FC<FacultyCardProps> = ({ faculty }) => {
   return (
-    <motion.article
-      initial="hidden"
-      animate="visible"
-      custom={index}
-      variants={cardVariants}
-      className="group perspective-1000 w-full max-w-2xl mx-auto"
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
-      aria-label={`Faculty card for ${faculty.name}`}
-    >
-      <motion.div
-        className="relative w-full h-[32rem] preserve-3d"
-        style={{ transformStyle: 'preserve-3d' }}
-        animate={isFlipped ? 'back' : 'front'}
-        variants={flipVariants}
-        transition={flipTransition}
-        aria-hidden={isFlipped}
-      >
-        {/* Front Side */}
-        <motion.div
-          className="absolute inset-0 w-full h-full backface-hidden bg-gradient-to-br from-white/5 to-white/10 dark:from-white/5 dark:to-white/10 rounded-2xl shadow-2xl overflow-hidden border border-white/20"
-          style={{ backfaceVisibility: 'hidden' }}
-          whileHover={{
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            scale: 1.01
-          }}
-        >
-          <div className="relative h-full">
-            {/* Department Color Bar */}
-            <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${getDepartmentColor(faculty.department)}`} />
-            
-            {/* Faculty Image */}
-            <div className="relative p-8 text-center">
-              <motion.div
-                className="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/30 bg-gray-700/50 flex items-center justify-center"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ 
-                  scale: 1, 
-                  opacity: 1,
-                  transition: { delay: 0.3, duration: 0.5 }
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  rotate: 2,
-                  transition: { 
-                    duration: 0.3,
-                    type: 'spring',
-                    stiffness: 200
-                  }
-                }}
-                aria-hidden="true"
-              >
-                {faculty.image ? (
-                  <img
-                    src={faculty.image}
-                    alt={`${faculty.name}'s profile photo`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI9cZzhvY2YiPjxwYXRoIGQ9Ik0xMiAxMmMxLjY1NyAwIDMtMS4zNDMgMy0zcy0xLjM0My0zLTMtM3MtMyAxLjM0My0zIDNzMS4zNDMgMyAzIDN6bTAgM2MtMi43NiAwLTggMS4zMTQtOCA0djJoMTZ2LTJjMC0yLjY4Ni01LjI0LTQtOC00eiIvPjwvc3ZnPg==';
-                    }}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-600 text-white text-5xl">
-                    {faculty.name.split(' ').map(n => n[0]).join('')}
-                  </div>
-                )}
-              </motion.div>
+    <div className="relative w-full max-w-5xl mx-auto 
+                    h-auto min-h-[20rem] md:min-h-[18rem] lg:min-h-[20rem] 
+                    rounded-2xl overflow-hidden 
+                    transition-all duration-300 ease-out 
+                    hover:transform hover:scale-[1.02] 
+                    hover:-translate-y-2
+                    hover:shadow-2xl hover:shadow-green-400/20
+                    cursor-pointer group mx-4 md:mx-auto">
+      
+      {/* Simple border on hover - no blinking */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 
+                      transition-opacity duration-300 z-[0]
+                      bg-gradient-to-r from-green-400/20 via-emerald-300/20 to-green-400/20 
+                      shadow-lg"></div>
+      
+      {/* Content background - pure black */}
+      <div className="absolute inset-[2px] rounded-2xl bg-black z-[10]"></div>
+      
+      {/* Inner gradient */}
+      <div className="absolute inset-[2px] rounded-2xl z-[11] 
+                      bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
 
-              <h3 className="text-lg font-semibold text-white mb-1">
-                {faculty.name}
-              </h3>
-              
-              <motion.p 
-                className="text-lg text-blue-300 font-medium mb-2"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { delay: 0.3 }
-                }}
-              >
-                {faculty.position}
-              </motion.p>
-              
-              <motion.p 
-                className="text-base text-gray-300 mb-6 font-medium"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { delay: 0.4 }
-                }}
-              >
-                {faculty.department}
-              </motion.p>
-
-              {/* Quick Contact */}
-              <motion.div 
-                className="flex justify-center gap-4 mb-6"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { delay: 0.5 }
-                }}
-              >
-                <motion.a
-                  href={`mailto:${faculty.email}`}
-                  className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Mail className="w-4 h-4 text-gray-200" />
-                </motion.a>
-                <motion.a
-                  href={`tel:${faculty.phone}`}
-                  className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Phone className="w-4 h-4 text-gray-200" />
-                </motion.a>
-              </motion.div>
-
-              {/* Specialties Preview */}
-              <div className="flex flex-wrap justify-center gap-1">
-                {faculty.specialties.slice(0, 2).map((specialty) => (
-                  <span
-                    key={specialty}
-                    className="px-2 py-1 bg-white/10 text-gray-200 rounded text-xs"
-                  >
-                    {specialty}
-                  </span>
-                ))}
-                {faculty.specialties.length > 2 && (
-                  <span className="px-2 py-1 bg-white/10 text-gray-300 rounded text-xs">
-                    +{faculty.specialties.length - 2}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Flip Indicator */}
-            <motion.div
-              className="absolute bottom-4 right-4"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            >
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Back Side */}
-        <motion.div
-          className="absolute inset-0 w-full h-full backface-hidden bg-white/5 dark:bg-white/5 rounded-xl shadow-lg overflow-hidden border border-white/10"
-          style={{ 
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)'
-          }}
-        >
-          <div className="h-full p-6 flex flex-col">
-            {/* Animated Background Elements */}
-            <motion.div 
-              className="absolute inset-0 -z-10 opacity-20"
-              style={{
-                backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 20%)',
-              }}
-              animate={{
-                backgroundPosition: ['0% 0%', '100% 100%'],
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'linear'
-              }}
+      {/* Content Layer */}
+      <div className="relative z-20 h-full w-full 
+                      p-4 md:p-6 lg:p-8 
+                      flex flex-col md:flex-row gap-4 md:gap-6 lg:gap-8 
+                      text-white overflow-hidden">
+        
+        {/* Profile Section */}
+        <div className="flex-shrink-0 
+                        w-full md:w-32 lg:w-40 
+                        flex md:flex-col items-center md:items-start 
+                        gap-4 md:gap-4">
+          
+          {/* Profile Image Container - no blinking */}
+          <div className="relative flex-shrink-0">
+            <img 
+              src={faculty.profileImage} 
+              alt={faculty.name}
+              className="relative w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 
+                         rounded-xl md:rounded-2xl 
+                         border-2 md:border-4 border-green-400/50 
+                         object-cover transition-all duration-300 
+                         group-hover:scale-105 md:group-hover:scale-110 
+                         shadow-2xl contrast-110 saturate-110
+                         group-hover:border-green-300/80 group-hover:shadow-green-400/40"
             />
             
-            {/* Header */}
-            <div className="text-center mb-4">
-              <motion.h3 
-                className="text-2xl font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { delay: 0.2 }
-                }}
-              >
-                {faculty.name}
-              </motion.h3>
-              <p className="text-xs text-blue-300">
-                {faculty.position}
-              </p>
+            {/* Status indicator - no blinking */}
+            <div className="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2 
+                            w-4 h-4 md:w-5 md:h-5 
+                            rounded-full border-2 md:border-3 border-white 
+                            bg-green-400 shadow-lg shadow-green-400/50
+                            group-hover:shadow-xl group-hover:shadow-green-400/80
+                            transition-all duration-300">
+              <div className="absolute inset-[2px] rounded-full bg-white/90"></div>
             </div>
-
-            {/* Bio */}
-            <motion.div 
-              className="px-2 mb-4"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ 
-                opacity: 1, 
-                y: 0,
-                transition: { delay: 0.2 }
-              }}
-            >
-              <p className="text-xs text-gray-300 leading-relaxed">
-                {faculty.bio}
-              </p>
-            </motion.div>
-
-            {/* Achievements */}
-            {faculty.achievements && Object.keys(faculty.achievements).length > 0 && (
-              <motion.div 
-                className="px-2 mb-3"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { delay: 0.3 }
-                }}
-              >
-                <h4 className="text-sm font-semibold text-white mb-2">
-                  Publications & Achievements
-                </h4>
-                <ul className="space-y-1.5 text-xs text-gray-300">
-                  {Object.entries(faculty.achievements).map(([key, value]) => {
-                    if (!value) return null;
-                    
-                    if (key === 'profile') {
-                      return (
-                        <li key={key} className="flex items-start">
-                          <a 
-                            href={value as string} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-blue-400 hover:underline flex items-center"
-                          >
-                            <ExternalLink className="w-3 h-3 mr-1" />
-                            View Profile
-                          </a>
-                        </li>
-                      );
-                    }
-                    
-                    return (
-                      <li key={key} className="flex items-start">
-                        <span className="text-blue-300 mr-1.5">•</span>
-                        <span>{value}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </motion.div>
-            )}
-            
-            {/* Visit Profile Buttons */}
-            {(faculty.name === 'Dr. Swastik Tripathi' || faculty.name === 'Dr. Shwet Ketu' || faculty.name === 'Dr. Satvik Vats') && (
-              <motion.div 
-                className="mt-auto px-6 py-4 border-t border-white/10"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { delay: 0.7 }
-                }}
-              >
-                <a 
-                  href={
-                    faculty.name === 'Dr. Swastik Tripathi' ? 'https://www.svats.in/' : 
-                    faculty.name === 'Dr. Shwet Ketu' ? 'https://sites.google.com/view/shwetketu' :
-                    'https://www.svats.in/'
-                  }
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors duration-200"
-                >
-                  <span>Visit Profile</span>
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
-              </motion.div>
-            )}
-            
-            {/* Contact & Social */}
-            <motion.div 
-              className="border-t border-white/10 pt-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ 
-                opacity: 1, 
-                y: 0,
-                transition: { delay: 1.0 }
-              }}
-            >
-              <div className="flex justify-center gap-4">
-                <motion.a
-                  href={`mailto:${faculty.email}`}
-                  className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Mail className="w-4 h-4 text-gray-200" />
-                </motion.a>
-                <motion.a
-                  href={`tel:${faculty.phone}`}
-                  className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Phone className="w-4 h-4 text-gray-200" />
-                </motion.a>
-                {socialIcons.map(({ icon: Icon, href, label }) => (
-                  <motion.a
-                    key={label}
-                    href={href}
-                    className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors duration-200"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Icon className="w-4 h-4 text-gray-200" />
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
           </div>
-        </motion.div>
-      </motion.div>
-    </motion.article>
-  );
-});
 
-FacultyCard.displayName = 'FacultyCard';
+          {/* Mobile: Basic Info */}
+          <div className="flex-1 md:hidden min-w-0">
+            <h3 className="text-xl font-bold mb-1 text-gray-200 leading-tight truncate
+                           group-hover:text-green-100 transition-colors duration-300">
+              {faculty.name}
+            </h3>
+            <div className="text-sm font-semibold mb-1 truncate 
+                            text-green-400 group-hover:text-green-300 transition-colors duration-300">
+              {faculty.title}
+            </div>
+          </div>
+
+          {/* Social Links - no blinking */}
+          <div className="hidden md:flex flex-col gap-2 mt-2 lg:mt-4">
+            {faculty.linkedinUrl && (
+              <a 
+                href={faculty.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative p-2 lg:p-2.5 bg-green-400/10 backdrop-blur-sm border border-green-400/30 
+                           rounded-lg lg:rounded-xl transition-all duration-300 
+                           hover:bg-green-400/25 hover:-translate-y-1 hover:shadow-lg hover:shadow-green-400/30
+                           hover:border-green-300/60 group/link overflow-hidden"
+              >
+                <Linkedin size={14} className="lg:w-4 lg:h-4 text-gray-300 group-hover/link:text-green-200 relative z-10 transition-colors duration-300" />
+              </a>
+            )}
+            
+            {/* Show website and Google Scholar for everyone except Shantanu (ID 4) */}
+            {faculty.id !== 4 && faculty.websiteUrl ? (
+              <a 
+                href={faculty.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative p-2 lg:p-2.5 bg-green-400/10 backdrop-blur-sm border border-green-400/30 
+                           rounded-lg lg:rounded-xl transition-all duration-300 
+                           hover:bg-green-400/25 hover:-translate-y-1 hover:shadow-lg hover:shadow-green-400/30
+                           hover:border-green-300/60 group/link overflow-hidden"
+              >
+                <Globe size={14} className="lg:w-4 lg:h-4 text-gray-300 group-hover/link:text-green-200 relative z-10 transition-colors duration-300" />
+              </a>
+            ) : faculty.id !== 4 && faculty.googleScholarUrl && (
+              <a 
+                href={faculty.googleScholarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative p-2 lg:p-2.5 bg-green-400/10 backdrop-blur-sm border border-green-400/30 
+                           rounded-lg lg:rounded-xl transition-all duration-300 
+                           hover:bg-green-400/25 hover:-translate-y-1 hover:shadow-lg hover:shadow-green-400/30
+                           hover:border-green-300/60 group/link overflow-hidden"
+              >
+                <div className="w-3.5 h-3.5 lg:w-4 lg:h-4 bg-gray-300 group-hover/link:bg-green-200 
+                                transition-colors duration-300 rounded-sm text-xs 
+                                flex items-center justify-center font-bold text-black relative z-10">
+                  G
+                </div>
+              </a>
+            )}
+            
+            {/* Show email for everyone except Shantanu (ID 4) */}
+            {faculty.id !== 4 && (
+              <a 
+                href={`mailto:${faculty.email}`}
+                className="relative p-2 lg:p-2.5 bg-green-400/10 backdrop-blur-sm border border-green-400/30 
+                           rounded-lg lg:rounded-xl transition-all duration-300 
+                           hover:bg-green-400/25 hover:-translate-y-1 hover:shadow-lg hover:shadow-green-400/30
+                           hover:border-green-300/60 group/link overflow-hidden"
+              >
+                <Mail size={14} className="lg:w-4 lg:h-4 text-gray-300 group-hover/link:text-green-200 relative z-10 transition-colors duration-300" />
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Right Section - Faculty Information */}
+        <div className="flex-1 flex flex-col justify-between min-w-0 space-y-2 md:space-y-3">
+          
+          {/* Desktop Header Info */}
+          <div className="hidden md:block min-w-0">
+            <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-1 lg:mb-2 
+                           text-gray-200 leading-tight truncate drop-shadow-lg
+                           group-hover:text-green-100 transition-colors duration-300">
+              {faculty.name}
+            </h3>
+            <div className="text-base lg:text-lg xl:text-xl font-semibold mb-1 truncate 
+                            text-green-400 group-hover:text-green-300 transition-colors duration-300">
+              {faculty.title}
+            </div>
+            <p className="text-gray-400 text-sm lg:text-base mb-1 lg:mb-2 leading-relaxed truncate
+                          group-hover:text-gray-300 transition-colors duration-300">
+              {faculty.department}
+            </p>
+            <p className="text-gray-500 text-xs lg:text-sm leading-relaxed line-clamp-2 lg:line-clamp-3
+                          group-hover:text-gray-400 transition-colors duration-300">
+              {faculty.description}
+            </p>
+          </div>
+
+          {/* Mobile Description */}
+          <div className="md:hidden min-w-0">
+            <p className="text-gray-400 text-sm mb-1 truncate
+                          group-hover:text-gray-300 transition-colors duration-300">
+              {faculty.department}
+            </p>
+            <p className="text-gray-500 text-xs leading-relaxed line-clamp-2
+                          group-hover:text-gray-400 transition-colors duration-300">
+              {faculty.description}
+            </p>
+          </div>
+
+          {/* Stats Section - Updated to show different metrics per faculty */}
+          <div className="flex flex-wrap gap-2 md:gap-3 lg:gap-4 justify-center md:justify-start py-2 md:py-3">
+            {/* Dr. Satvik Vats - ID 1 */}
+            {faculty.id === 1 && (
+              <>
+                {faculty.patents && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.patents}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Patents</div>
+                  </div>
+                )}
+                {faculty.projectPublications && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.projectPublications}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Projects</div>
+                  </div>
+                )}
+                {faculty.booksPublished && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.booksPublished}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Books</div>
+                  </div>
+                )}
+                {faculty.internationalPublications && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.internationalPublications}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Intl Pubs</div>
+                  </div>
+                )}
+                {faculty.organisations && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.organisations}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Orgs</div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Dr. Shwet Ketu - ID 2 */}
+            {faculty.id === 2 && (
+              <>
+                {faculty.patents && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.patents}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Patents</div>
+                  </div>
+                )}
+                {faculty.internationalConferences && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.internationalConferences}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Intl Conf</div>
+                  </div>
+                )}
+                {faculty.internationalPublications && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.internationalPublications}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Intl Pubs</div>
+                  </div>
+                )}
+                {faculty.organisations && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.organisations}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Orgs</div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Dr. Satya Prakash Yadav - ID 3 */}
+            {faculty.id === 3 && (
+              <>
+                {faculty.articles && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.articles}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Articles</div>
+                  </div>
+                )}
+                {faculty.citations && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.citations}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Citations</div>
+                  </div>
+                )}
+                {faculty.experience && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.experience}+
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Years</div>
+                  </div>
+                )}
+                {faculty.booksPublished && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.booksPublished}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Books</div>
+                  </div>
+                )}
+                {faculty.organisations && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.organisations}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Orgs</div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Dr. Shantanu Shahi - ID 4 */}
+            {faculty.id === 4 && (
+              <>
+                {faculty.skills && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.skills}+
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Skills</div>
+                  </div>
+                )}
+                {faculty.areasOfExpertise && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.areasOfExpertise}
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Areas</div>
+                  </div>
+                )}
+                {faculty.experience && (
+                  <div className="text-center flex-shrink-0">
+                    <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold 
+                                    text-green-400 group-hover:text-green-300 transition-colors duration-300 drop-shadow-lg">
+                      {faculty.experience}+
+                    </div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Years</div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Specialization Tags */}
+          <div className="w-full overflow-hidden">
+            <div className="flex flex-wrap gap-2 md:gap-2.5 justify-center md:justify-start pb-2 md:pb-0">
+              {faculty.specialization.slice(0, 4).map((skill, index) => (
+                <span 
+                  key={index} 
+                  className="relative bg-green-400/10 backdrop-blur-sm border border-green-400/25 
+                             px-2.5 py-1.5 md:px-3 md:py-1.5 lg:px-4 lg:py-2 
+                             rounded-lg md:rounded-xl lg:rounded-2xl 
+                             text-xs md:text-xs lg:text-sm font-semibold 
+                             transition-all duration-300 hover:bg-green-400/25 
+                             hover:-translate-y-1 whitespace-nowrap text-gray-400 
+                             shadow-lg hover:shadow-xl flex-shrink-0 hover:border-green-300/50
+                             group-hover:border-green-400/40 overflow-hidden"
+                >
+                  <span className="relative z-10 group-hover:text-green-200 transition-colors duration-300">
+                    {skill.length > 20 ? skill.substring(0, 18) + '...' : skill}
+                  </span>
+                </span>
+              ))}
+              {faculty.specialization.length > 4 && (
+                <span className="bg-green-400/10 backdrop-blur-sm border border-green-400/25 
+                                 px-2.5 py-1.5 md:px-3 md:py-1.5 lg:px-4 lg:py-2 
+                                 rounded-lg md:rounded-xl lg:rounded-2xl 
+                                 text-xs md:text-xs lg:text-sm 
+                                 font-semibold text-gray-400 flex-shrink-0
+                                 group-hover:text-green-200 transition-colors duration-300">
+                  +{faculty.specialization.length - 4}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Social Links */}
+          <div className="flex md:hidden gap-3 justify-center pt-2 pb-1">
+            {faculty.linkedinUrl && (
+              <a 
+                href={faculty.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-green-400/10 backdrop-blur-sm border border-green-400/25 
+                           rounded-lg transition-all duration-300 hover:bg-green-400/25 flex-shrink-0
+                           hover:border-green-300/50 hover:shadow-lg hover:shadow-green-400/30"
+              >
+                <Linkedin size={14} className="text-gray-300 hover:text-green-200 transition-colors duration-300" />
+              </a>
+            )}
+            
+            {/* Show website and Google Scholar for everyone except Shantanu (ID 4) */}
+            {faculty.id !== 4 && faculty.websiteUrl ? (
+              <a 
+                href={faculty.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-green-400/10 backdrop-blur-sm border border-green-400/25 
+                           rounded-lg transition-all duration-300 hover:bg-green-400/25 flex-shrink-0
+                           hover:border-green-300/50 hover:shadow-lg hover:shadow-green-400/30"
+              >
+                <Globe size={14} className="text-gray-300 hover:text-green-200 transition-colors duration-300" />
+              </a>
+            ) : faculty.id !== 4 && faculty.googleScholarUrl && (
+              <a 
+                href={faculty.googleScholarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-green-400/10 backdrop-blur-sm border border-green-400/25 
+                           rounded-lg transition-all duration-300 hover:bg-green-400/25 flex-shrink-0
+                           hover:border-green-300/50 hover:shadow-lg hover:shadow-green-400/30"
+              >
+                <div className="w-3.5 h-3.5 bg-gray-300 hover:bg-green-200 transition-colors duration-300
+                                rounded-sm text-xs flex items-center justify-center font-bold text-black">
+                  G
+                </div>
+              </a>
+            )}
+            
+            {/* Show email for everyone except Shantanu (ID 4) */}
+            {faculty.id !== 4 && (
+              <a 
+                href={`mailto:${faculty.email}`}
+                className="p-2 bg-green-400/10 backdrop-blur-sm border border-green-400/25 
+                           rounded-lg transition-all duration-300 hover:bg-green-400/25 flex-shrink-0
+                           hover:border-green-300/50 hover:shadow-lg hover:shadow-green-400/30"
+              >
+                <Mail size={14} className="text-gray-300 hover:text-green-200 transition-colors duration-300" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default FacultyCard;
