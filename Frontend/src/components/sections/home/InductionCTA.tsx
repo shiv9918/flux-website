@@ -15,7 +15,7 @@ export default function InductionCTA() {
             </p>
             <div className="mt-6">
               <Button asChild className="bg-primary text-black hover:brightness-110">
-                <a href="/contact">Apply Now</a>
+                <a href="/join">Apply Now</a>
               </Button>
             </div>
           </div>
