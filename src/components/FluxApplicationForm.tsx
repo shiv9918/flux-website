@@ -15,7 +15,19 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, User, Mail, Phone, GraduationCap, Hash, Calendar, GitBranch, MessageSquare } from "lucide-react";
+import {
+  Loader2,
+  User,
+  Mail,
+  Phone,
+  Hash,
+  Calendar,
+  GitBranch,
+  MessageSquare,
+  Star,
+  Wrench,
+  Users,
+} from "lucide-react";
 
 const applicationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -24,7 +36,13 @@ const applicationSchema = z.object({
   rollNo: z.string().min(1, "Roll number is required"),
   year: z.string().min(1, "Year is required"),
   branch: z.string().min(1, "Branch is required"),
-  whyJoin: z.string().min(50, "Please provide at least 50 characters explaining why you want to join"),
+  softSkills: z.string().min(1, "Please mention at least one soft skill"),
+  hardSkills: z.string().min(1, "Please mention at least one hard skill"),
+  society: z.string().min(1, "Please mention your current society or write 'None'"),
+  whyJoin: z.string().min(
+    50,
+    "Please provide at least 50 characters explaining why you want to join"
+  ),
 });
 
 type ApplicationForm = z.infer<typeof applicationSchema>;
@@ -32,25 +50,26 @@ type ApplicationForm = z.infer<typeof applicationSchema>;
 const years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 const branches = [
   "Computer Science Engineering",
-  "Electronics & Communication Engineering", 
+  "Electronics & Communication Engineering",
   "Mechanical Engineering",
   "Electrical Engineering",
   "Civil Engineering",
   "Information Technology",
   "Chemical Engineering",
   "Biotechnology",
-  "Aerospace Engineering",
+  "IoT",
+  "BBA",
+  "BPharma",
 ];
 
 export const FluxApplicationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  
+
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
     reset,
   } = useForm<ApplicationForm>({
@@ -59,17 +78,13 @@ export const FluxApplicationForm = () => {
 
   const onSubmit = async (data: ApplicationForm) => {
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     console.log("Application submitted:", data);
-    
     toast({
       title: "Application Submitted!",
-      description: "Thank you for applying to FLUX. We'll review your application and get back to you soon.",
+      description:
+        "Thank you for applying to FLUX. We'll review your application and get back to you soon.",
     });
-    
     reset();
     setIsSubmitting(false);
   };
@@ -88,6 +103,7 @@ export const FluxApplicationForm = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Full Name */}
             <div className="space-y-2">
               <Label htmlFor="fullName" className="flex items-center gap-2">
                 <User className="w-4 h-4" />
@@ -104,6 +120,7 @@ export const FluxApplicationForm = () => {
               )}
             </div>
 
+            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
@@ -121,6 +138,7 @@ export const FluxApplicationForm = () => {
               )}
             </div>
 
+            {/* Phone */}
             <div className="space-y-2">
               <Label htmlFor="phone" className="flex items-center gap-2">
                 <Phone className="w-4 h-4" />
@@ -137,6 +155,7 @@ export const FluxApplicationForm = () => {
               )}
             </div>
 
+            {/* Roll No */}
             <div className="space-y-2">
               <Label htmlFor="rollNo" className="flex items-center gap-2">
                 <Hash className="w-4 h-4" />
@@ -153,6 +172,7 @@ export const FluxApplicationForm = () => {
               )}
             </div>
 
+            {/* Year */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -175,6 +195,7 @@ export const FluxApplicationForm = () => {
               )}
             </div>
 
+            {/* Branch */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <GitBranch className="w-4 h-4" />
@@ -196,8 +217,60 @@ export const FluxApplicationForm = () => {
                 <p className="text-sm text-destructive">{errors.branch.message}</p>
               )}
             </div>
+
+            {/* Soft Skills */}
+            <div className="space-y-2">
+              <Label htmlFor="softSkills" className="flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                Soft Skills
+              </Label>
+              <Input
+                id="softSkills"
+                placeholder="E.g. Communication, Teamwork, Leadership"
+                {...register("softSkills")}
+                className="bg-input border-flux-border focus:border-primary"
+              />
+              {errors.softSkills && (
+                <p className="text-sm text-destructive">{errors.softSkills.message}</p>
+              )}
+            </div>
+
+            {/* Hard Skills */}
+            <div className="space-y-2">
+              <Label htmlFor="hardSkills" className="flex items-center gap-2">
+                <Wrench className="w-4 h-4" />
+                Hard Skills
+              </Label>
+              <Input
+                id="hardSkills"
+                placeholder="E.g. Programming, Graphic Design, Data Analysis"
+                {...register("hardSkills")}
+                className="bg-input border-flux-border focus:border-primary"
+              />
+              {errors.hardSkills && (
+                <p className="text-sm text-destructive">{errors.hardSkills.message}</p>
+              )}
+            </div>
+
+            {/* Society */}
+            <div className="space-y-2">
+              <Label htmlFor="society" className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Current Society (if any)
+              </Label>
+              <Input
+                id="society"
+                placeholder="Mention your current society or write 'None'"
+                {...register("society")}
+                className="bg-input border-flux-border focus:border-primary"
+              />
+              {errors.society && (
+                <p className="text-sm text-destructive">{errors.society.message}</p>
+              )}
+            </div>
           </div>
 
+          {/* Why Join */}
           <div className="space-y-2">
             <Label htmlFor="whyJoin" className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
