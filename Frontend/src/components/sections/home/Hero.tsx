@@ -98,12 +98,12 @@ const TypewriterMotto = () => {
           background: "linear-gradient(180deg, hsl(var(--primary)), #10b981)",
           boxShadow: "0 0 10px hsl(var(--primary))",
         }}
-        animate={{ 
+        animate={{
           opacity: [0, 1, 0],
           scaleY: [0.8, 1, 0.8],
         }}
-        transition={{ 
-          duration: 1, 
+        transition={{
+          duration: 1,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -125,13 +125,15 @@ export default function Hero() {
         const rect = sectionRef.current.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        
+
         setMousePosition({ x, y });
-        
+
         // Calculate intensity based on distance from center
         const centerX = 50;
         const centerY = 50;
-        const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+        const distance = Math.sqrt(
+          Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)
+        );
         const maxDistance = Math.sqrt(2500 + 2500); // diagonal distance
         const newIntensity = 1 + (distance / maxDistance) * 2; // 1 to 3 range
         setIntensity(newIntensity);
@@ -140,23 +142,23 @@ export default function Hero() {
 
     const section = sectionRef.current;
     if (section) {
-      section.addEventListener('mousemove', handleMouseMove);
-      return () => section.removeEventListener('mousemove', handleMouseMove);
+      section.addEventListener("mousemove", handleMouseMove);
+      return () => section.removeEventListener("mousemove", handleMouseMove);
     }
   }, []);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-background/90"
     >
-      
       {/* FLUX Background Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <motion.span 
+        <motion.span
           className="text-[clamp(18rem,35vw,30rem)] font-black leading-none tracking-tighter select-none opacity-8"
           style={{
-            background: "linear-gradient(135deg, hsl(var(--primary)), #10b981, #059669)",
+            background:
+              "linear-gradient(135deg, hsl(var(--primary)), #10b981, #059669)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -194,7 +196,12 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none">
         <svg className="w-full h-full opacity-20">
           <defs>
-            <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+            <pattern
+              id="grid"
+              width="50"
+              height="50"
+              patternUnits="userSpaceOnUse"
+            >
               <path
                 d="M 50 0 L 0 0 0 50"
                 fill="none"
@@ -209,17 +216,32 @@ export default function Hero() {
       </div>
 
       {/* Animated Circuit Lines */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.4 * intensity }}>
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        style={{ opacity: 0.4 * intensity }}
+      >
         <defs>
-          <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
+          <linearGradient
+            id="circuitGradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
+            <stop
+              offset="0%"
+              stopColor="hsl(var(--primary))"
+              stopOpacity="0.8"
+            />
             <stop offset="100%" stopColor="#10b981" stopOpacity="0.3" />
           </linearGradient>
         </defs>
-        
+
         {/* Dynamic circuit paths that respond to mouse */}
         <motion.path
-          d={`M 0,${mousePosition.y * 4} Q ${mousePosition.x * 8},${mousePosition.y * 2} ${mousePosition.x * 10},${mousePosition.y * 6}`}
+          d={`M 0,${mousePosition.y * 4} Q ${mousePosition.x * 8},${
+            mousePosition.y * 2
+          } ${mousePosition.x * 10},${mousePosition.y * 6}`}
           stroke="url(#circuitGradient)"
           strokeWidth={2 * intensity}
           fill="none"
@@ -227,15 +249,22 @@ export default function Hero() {
           animate={{ pathLength: 1 }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         <motion.path
-          d={`M ${mousePosition.x * 12},0 Q ${mousePosition.x * 6},${mousePosition.y * 4} ${mousePosition.x * 14},${mousePosition.y * 8}`}
+          d={`M ${mousePosition.x * 12},0 Q ${mousePosition.x * 6},${
+            mousePosition.y * 4
+          } ${mousePosition.x * 14},${mousePosition.y * 8}`}
           stroke="url(#circuitGradient)"
           strokeWidth={1.5 * intensity}
           fill="none"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
         />
       </svg>
 
@@ -247,11 +276,11 @@ export default function Hero() {
             className="absolute text-xs font-mono text-primary/30 whitespace-pre-line"
             style={{
               left: `${5 + i * 8}%`,
-              top: '-10%',
+              top: "-10%",
               fontFamily: "'JetBrains Mono', monospace",
             }}
             animate={{
-              y: ['0vh', '110vh'],
+              y: ["0vh", "110vh"],
               opacity: [0, 0.6 * intensity, 0],
             }}
             transition={{
@@ -261,7 +290,9 @@ export default function Hero() {
               delay: i * 0.8,
             }}
           >
-            {Array.from({ length: 20 }, () => Math.random() > 0.5 ? '1' : '0').join('\n')}
+            {Array.from({ length: 20 }, () =>
+              Math.random() > 0.5 ? "1" : "0"
+            ).join("\n")}
           </motion.div>
         ))}
       </div>
@@ -272,10 +303,11 @@ export default function Hero() {
           const baseX = (i % 5) * 20 + 10;
           const baseY = Math.floor(i / 5) * 20 + 10;
           const distanceFromMouse = Math.sqrt(
-            Math.pow(baseX - mousePosition.x, 2) + Math.pow(baseY - mousePosition.y, 2)
+            Math.pow(baseX - mousePosition.x, 2) +
+              Math.pow(baseY - mousePosition.y, 2)
           );
           const influence = Math.max(0, 1 - distanceFromMouse / 50);
-          
+
           return (
             <motion.div
               key={`particle-${i}`}
@@ -318,7 +350,7 @@ export default function Hero() {
         style={{
           left: `${mousePosition.x}%`,
           top: `${mousePosition.y}%`,
-          transform: 'translate(-50%, -50%)',
+          transform: "translate(-50%, -50%)",
           width: `${300 + intensity * 100}px`,
           height: `${300 + intensity * 100}px`,
           background: `radial-gradient(circle at center, 
@@ -347,9 +379,10 @@ export default function Hero() {
             style={{
               left: `${15 + (i % 3) * 25}%`,
               top: `${20 + Math.floor(i / 3) * 15}%`,
-              width: '40px',
-              height: '40px',
-              clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+              width: "40px",
+              height: "40px",
+              clipPath:
+                "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
             }}
             animate={{
               rotate: [0, 360],
@@ -385,7 +418,7 @@ export default function Hero() {
 
       {/* Code Snippets Floating */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {['<div>', '{code}', 'func()', '&&', '||', '==='].map((code, i) => (
+        {["<div>", "{code}", "func()", "&&", "||", "==="].map((code, i) => (
           <motion.div
             key={`code-${i}`}
             className="absolute text-xs font-mono text-primary/25"
@@ -442,10 +475,9 @@ export default function Hero() {
           animate="visible"
           className="space-y-4"
         >
-          
           {/* Main Heading */}
           <motion.div variants={textChild} className="space-y-3">
-            <h1 
+            <h1
               className="text-[clamp(3rem,7vw,5rem)] font-black leading-[0.9] tracking-tight text-white"
               style={{
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -465,7 +497,8 @@ export default function Hero() {
               <span className="text-gray-100 mr-3">Igniting Ideas,</span>
               <motion.span
                 style={{
-                  background: "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 50%, #059669 100%)",
+                  background:
+                    "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 50%, #059669 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -489,17 +522,21 @@ export default function Hero() {
           </motion.div>
 
           {/* Description */}
-          <motion.div variants={textChild} className="space-y-4 max-w-4xl mx-auto">
-            <p 
+          <motion.div
+            variants={textChild}
+            className="space-y-4 max-w-4xl mx-auto"
+          >
+            <p
               className="text-lg text-gray-200 leading-relaxed font-medium"
               style={{
                 fontFamily: "'Inter', 'Segoe UI', sans-serif",
               }}
             >
               <span className="text-xl mr-2">🚀</span>
-              <strong 
+              <strong
                 style={{
-                  background: "linear-gradient(135deg, hsl(var(--primary)), #10b981)",
+                  background:
+                    "linear-gradient(135deg, hsl(var(--primary)), #10b981)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -507,20 +544,22 @@ export default function Hero() {
                 }}
               >
                 Unleashing Innovation
-              </strong> in Computer Science & Engineering
+              </strong>{" "}
+              in Computer Science & Engineering
             </p>
-            
-            <p 
+
+            <p
               className="text-base text-gray-300 leading-relaxed max-w-3xl mx-auto"
               style={{
                 fontFamily: "'Inter', 'Segoe UI', sans-serif",
               }}
             >
               Join{" "}
-              <motion.strong 
+              <motion.strong
                 className="font-bold text-xl"
                 style={{
-                  background: "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 100%)",
+                  background:
+                    "linear-gradient(135deg, hsl(var(--primary)) 0%, #10b981 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -540,71 +579,76 @@ export default function Hero() {
                 FLUX
               </motion.strong>{" "}
               – where brilliant minds converge to push the boundaries of
-              technology, foster groundbreaking research, and build the
-              future of computing.
+              technology, foster groundbreaking research, and build the future
+              of computing.
             </p>
 
             {/* Feature Tags */}
             <div className="flex flex-wrap justify-center items-center gap-4 pt-3">
-              {[
-                "Innovation Hub",
-                "Research Excellence", 
-                "Future Tech"
-              ].map((label, i) => (
-                <motion.div
-                  key={label}
-                  className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 backdrop-blur-sm"
-                  animate={{ 
-                    y: [0, -3, 0],
-                    borderColor: [
-                      "rgba(16, 185, 129, 0.4)",
-                      "rgba(16, 185, 129, 0.7)",
-                      "rgba(16, 185, 129, 0.4)",
-                    ],
-                  }}
-                  transition={{ 
-                    y: { duration: 4, repeat: Infinity, delay: i * 0.3 },
-                    borderColor: { duration: 3, repeat: Infinity, delay: i * 0.3 },
-                  }}
-                >
-                  <div
-                    className="w-2 h-2 rounded-full bg-primary"
-                    style={{ boxShadow: "0 0 8px hsl(var(--primary))" }}
-                  />
-                  <span 
-                    className="text-gray-300 font-medium text-sm"
-                    style={{
-                      fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+              {["Innovation Hub", "Research Excellence", "Future Tech"].map(
+                (label, i) => (
+                  <motion.div
+                    key={label}
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 backdrop-blur-sm"
+                    animate={{
+                      y: [0, -3, 0],
+                      borderColor: [
+                        "rgba(16, 185, 129, 0.4)",
+                        "rgba(16, 185, 129, 0.7)",
+                        "rgba(16, 185, 129, 0.4)",
+                      ],
+                    }}
+                    transition={{
+                      y: { duration: 4, repeat: Infinity, delay: i * 0.3 },
+                      borderColor: {
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                      },
                     }}
                   >
-                    {label}
-                  </span>
-                </motion.div>
-              ))}
+                    <div
+                      className="w-2 h-2 rounded-full bg-primary"
+                      style={{ boxShadow: "0 0 8px hsl(var(--primary))" }}
+                    />
+                    <span
+                      className="text-gray-300 font-medium text-sm"
+                      style={{
+                        fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+                      }}
+                    >
+                      {label}
+                    </span>
+                  </motion.div>
+                )
+              )}
             </div>
           </motion.div>
 
           {/* CTA Buttons */}
-          <motion.div variants={textChild} className="flex flex-wrap justify-center gap-4 pt-4">
+          <motion.div
+            variants={textChild}
+            className="flex flex-wrap justify-center gap-4 pt-4"
+          >
             <motion.div
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               className="rounded-lg overflow-hidden"
               style={{
-                background: "linear-gradient(45deg, hsl(var(--primary)), #10b981)",
+                background:
+                  "linear-gradient(45deg, hsl(var(--primary)), #10b981)",
                 boxShadow: "0 0 20px rgba(16, 185, 129, 0.4)",
               }}
             >
-              <div className="px-6 py-3">
-                <span 
-                  className="text-white font-semibold"
-                  style={{
-                    fontFamily: "'Space Grotesk', 'Inter', sans-serif",
-                  }}
-                >
+              <a
+                href="/about" // 🔗 change this to your actual route
+                className="px-6 py-3 inline-block bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-md hover:opacity-90 transition"
+                style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
+              >
+                <span className="text-white font-semibold">
                   🔥 Explore FLUX
                 </span>
-              </div>
+              </a>
             </motion.div>
 
             <motion.div
@@ -615,7 +659,7 @@ export default function Hero() {
                 boxShadow: "0 0 15px rgba(16, 185, 129, 0.2)",
               }}
             >
-              <span 
+              <span
                 className="text-gray-300 font-semibold"
                 style={{
                   fontFamily: "'Space Grotesk', 'Inter', sans-serif",
@@ -645,11 +689,15 @@ export default function Hero() {
                 ease: "linear",
               }}
             >
-              <span className="mr-8 font-bold text-gray-400">Future Leaders of Unbound Experiments</span>
+              <span className="mr-8 font-bold text-gray-400">
+                Future Leaders of Unbound Experiments
+              </span>
               <span className="mr-8">Innovation • Research • Excellence</span>
               <span className="mr-8">Building Tomorrow's Technology</span>
               <span className="mr-8">Computer Science & Engineering</span>
-              <span className="mr-8 font-bold text-primary">MMMUT Gorakhpur</span>
+              <span className="mr-8 font-bold text-primary">
+                MMMUT Gorakhpur
+              </span>
             </motion.div>
           </motion.div>
         </motion.div>
