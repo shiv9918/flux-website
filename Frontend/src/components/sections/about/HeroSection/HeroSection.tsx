@@ -82,27 +82,27 @@ const HeroSection: React.FC<HeroSectionProps> = ({ description }) => {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/50"></div>
 
-      {/* Hero Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-        {/* Title */}
-        <div className="mb-8">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold whitespace-nowrap">
+      {/* Hero Content - Mobile Compatible */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center -translate-y-[1.5cm] px-4">
+        {/* Title - Responsive Sizing */}
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold leading-tight">
             <span className="text-white">Welcome To</span>{' '}
-            <span className="text-green-400">FLUX</span>
+            <span className="text-green-400 block sm:inline">FLUX</span>
           </h1>
         </div>
 
-        {/* Typewriter Effect */}
-        <div className="mb-12 h-16 md:h-20 flex items-center justify-center">
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-semibold whitespace-nowrap min-h-[3rem] flex items-center">
+        {/* Typewriter Effect - Mobile Optimized */}
+        <div className="mb-8 md:mb-12 h-12 sm:h-16 md:h-20 flex items-center justify-center px-2">
+          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-4xl xl:text-5xl font-semibold min-h-[2rem] md:min-h-[3rem] flex items-center text-center">
             <span className="text-green-300">{displayText}</span>
             <span className="animate-pulse">|</span>
           </h2>
         </div>
 
-        {/* Caption */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-6">
-          <p className="text-sm md:text-base text-white leading-relaxed">
+        {/* Caption - Mobile Responsive */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4 md:px-6">
+          <p className="text-xs sm:text-sm md:text-base text-white leading-relaxed text-center">
             {description}
           </p>
         </div>
