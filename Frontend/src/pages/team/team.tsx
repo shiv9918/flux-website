@@ -12,8 +12,11 @@ import ysvImage from "../../assets/images/ysv.jpg";
 import threeMImage from "../../assets/images/3m.jpg";
 import presidentImage from "../../assets/images/president.jpg";
 
+
 const Team = () => {
-  const teamMembers = [
+  // ORIGINAL TEAM MEMBERS DATA - COMMENTED FOR FUTURE USE
+  /*
+  const teamMembersOriginal = [
     {
       name: "Aryan Shandilya",
       role: "Executive Engineer",
@@ -78,6 +81,75 @@ const Team = () => {
       email: "2023021270@mmmut.ac.in",
       linkedin: "https://www.linkedin.com/in/yashvardhann/",
       image: threeMImage
+    }
+  ];
+  */
+
+  // PLACEHOLDER TEAM MEMBERS - AWAITING INDUCTION
+  const teamMembers = [
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer",
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A",
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer", 
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A",
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer",
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A", 
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer",
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A",
+      linkedin: "N/A", 
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer",
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A",
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction", 
+      role: "Executive Engineer",
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A",
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer", 
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!",
+      email: "N/A",
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
+    },
+    {
+      name: "Awaiting Induction",
+      role: "Executive Engineer",
+      description: "This position is currently open and awaiting the induction of a new team member. Stay tuned for updates!", 
+      email: "N/A",
+      linkedin: "N/A",
+      image: "?" // This will be handled in TeamCard to show question mark
     }
   ];
 
@@ -164,7 +236,7 @@ const Team = () => {
             </div>
           </div>
 
-          {/* Other Team Members */}
+          {/* Other Team Members - PLACEHOLDER CARDS */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {teamMembers.map((member, index) => (
               <div 
