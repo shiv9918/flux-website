@@ -26,7 +26,7 @@ const Application = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 min-h-screen">
             {/* Left Column - Application Form */}
             <div className="flex items-start justify-center">
-              <div className="w-full max-w-lg">
+              <div id="join" className="w-full max-w-lg">
                 <FluxApplicationForm />
               </div>
             </div>
