@@ -10,14 +10,17 @@ type Testimonial = {
   img?: string
 }
 
+// Commented out testimonials for future use
+/*
 const testimonials: Testimonial[] = [
   { text: "WebFlux is where I found my tribe — developers and learners who actually care about growth.", user: "@AnanyaCodes" },
   { text: "The seminars at WebFlux helped me land my first internship in tech. Highly recommend joining!", user: "@RaviDev" },
-  { text: "It’s not just a society, it’s an ecosystem for CSE students to learn, build, and collaborate.", user: "@PriyaBuilds" },
+  { text: "It's not just a society, it's an ecosystem for CSE students to learn, build, and collaborate.", user: "@PriyaBuilds" },
   { text: "From hackathons to dev tasks, WebFlux keeps you challenged and inspired.", user: "@CodeWithAarav" },
   { text: "As a newbie, I felt right at home. WebFlux members are super supportive and motivating.", user: "@IshaLearns" },
-  { text: "The WebFlux community turned my coding curiosity into real-world projects. Couldn’t ask for more.", user: "@NeerajTech" },
+  { text: "The WebFlux community turned my coding curiosity into real-world projects. Couldn't ask for more.", user: "@NeerajTech" },
 ]
+*/
 
 export default function Footer() {
   const [email, setEmail] = useState<string>("")
@@ -86,6 +89,8 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Commented out testimonials section for future use */}
+          {/*
           <h2 className="text-2xl font-bold text-center mt-12 mb-8 text-emerald-400">Loved by the Community</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -106,44 +111,45 @@ export default function Footer() {
               </div>
             ))}
           </div>
+          */}
 
           <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-700 pt-6 text-gray-400 text-sm">
-  <p>© {new Date().getFullYear()} WebFlux. All rights reserved.</p>
-  
-  <div className="flex gap-4 text-lg mt-4 md:mt-0">
-    <a 
-      href="flux@mmmut.ac.in" 
-      target="_blank" 
-      rel="noopener noreferrer"
-    >
-      <SiGmail className="hover:text-emerald-400 cursor-pointer transition-colors duration-300" />
-    </a>
+            <p>© {new Date().getFullYear()} WebFlux. All rights reserved.</p>
+            
+            <div className="flex gap-4 text-lg mt-4 md:mt-0">
+              <a 
+                href="flux@mmmut.ac.in" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <SiGmail className="hover:text-emerald-400 cursor-pointer transition-colors duration-300" />
+              </a>
 
-    <a 
-      href="https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq" 
-      target="_blank" 
-      rel="noopener noreferrer"
-    >
-      <FaWhatsapp className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
-    </a>
+              <a 
+                href="https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVqJ0R?mode=ac_t" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <FaWhatsapp className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
+              </a>
 
-    <a 
-      href="https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2" 
-      target="_blank" 
-      rel="noopener noreferrer"
-    >
-      <FaInstagram className="hover:text-pink-400 cursor-pointer transition-colors duration-300" />
-    </a>
+              <a 
+                href="https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <FaInstagram className="hover:text-pink-400 cursor-pointer transition-colors duration-300" />
+              </a>
 
-        <a 
-      href="https://www.linkedin.com/company/flux-mmm/" 
-      target="_blank" 
-      rel="noopener noreferrer"
-    >
-      <FaLinkedin className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
-    </a>
-  </div>
-</div>
+              <a 
+                href="https://www.linkedin.com/company/flux-mmm/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
+              </a>
+            </div>
+          </div>
 
         </div>
       </footer>
