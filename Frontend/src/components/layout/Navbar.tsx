@@ -240,7 +240,7 @@ const Navbar: React.FC = () => {
                 {
                   Icon: FaWhatsapp,
                   color: "#0A66C2",
-                  link: "https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVq",
+                  link: "https://chat.whatsapp.com/F8O8hTu2aCZ6NKLeRVqJ0R?mode=ac_t ",
                 },
                 {
                   Icon: FaInstagram,
