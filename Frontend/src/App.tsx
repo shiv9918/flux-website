@@ -8,7 +8,8 @@ import AboutPage from "@/pages/about/AboutPage";
 import EventsPage from "@/pages/events/events";
 import ContactPage from "@/pages/contact/contact";
 import TeamPage from "@/pages/team/team";
-import { Toaster } from "sonner";
+// import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/toaster";
 import Application from "@/pages/induction/Application";
 import MobileLayout from "@/components/layout/mobileLayout";
 

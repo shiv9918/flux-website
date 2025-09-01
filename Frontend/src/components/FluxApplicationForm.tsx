@@ -76,17 +76,56 @@ export const FluxApplicationForm = () => {
     resolver: zodResolver(applicationSchema),
   });
 
+  const parseSkills = (value: string) => {
+    if (!value) return [];
+    return value.includes(",")
+      ? value.split(",").map((s) => s.trim()).filter(Boolean)
+      : [value.trim()];
+  };
+
   const onSubmit = async (data: ApplicationForm) => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Application submitted:", data);
-    toast({
-      title: "Application Submitted!",
-      description:
-        "Thank you for applying to FLUX. We'll review your application and get back to you soon.",
-    });
-    reset();
-    setIsSubmitting(false);
+
+    const API_BASE = import.meta.env.VITE_API_BASE || "";
+
+    const payload = {
+      name: data.fullName,
+      branch: data.branch,
+      year: data.year,
+      phone: data.phone,
+      email: data.email,
+      whyJoin: data.whyJoin,
+      softSkills: parseSkills(data.softSkills),
+      hardSkills: parseSkills(data.hardSkills),
+    } as const;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/applications`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const body = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        toast({
+          title: "Application Submitted!",
+          description:
+            "Thank you for applying to FLUX. We'll review your application and get back to you soon.",
+        });
+        reset();
+      } else if (res.status === 409) {
+        toast({ title: "Duplicate Entry", description: body.error || "Phone or email already exists" });
+      } else {
+        toast({ title: "Submission Failed", description: body.error || "Unexpected server error" });
+      }
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Network Error", description: "Could not reach the server. Check your network or backend." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
