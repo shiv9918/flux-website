@@ -3,7 +3,7 @@ import type { HeroSectionProps } from './HeroSection.types';
 import fluxVideo from "@/assets/videos/flux-background.mp4";
 
 const phrases = [
-  'Future Leaders of Unbound Experiments',
+  'Future Leaders of Unbound Xperiments',
   'Innovate. Interact. Impact.'
 ];
 
