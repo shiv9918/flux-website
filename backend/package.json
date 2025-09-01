@@ -2,10 +2,10 @@
   "name": "flux-dbms-backend",
   "version": "1.0.0",
   "description": "Simple Express + MongoDB backend to accept application form data",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "build": "echo 'No build step for backend'"
   },
   "keywords": [],
@@ -24,6 +24,6 @@
   "devDependencies": {
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.10"
   }
 }
