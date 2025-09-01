@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import Showcase from "@/components/sections/home/Showcase"
 import InductionCTA from "@/components/sections/home/InductionCTA"
 import FacultyPreview from "@/components/sections/home/FacultyPreview"
-import TeamPreview from "@/components/sections/home/TeamPreview"
+
 import EventsPreview from "@/components/sections/home/EventsPreview"
 import ContactPreview from "@/components/sections/home/ContactPreview"
 
@@ -19,7 +19,6 @@ export default function HomePage() {
         <Showcase />
         <EventsPreview />
         <FacultyPreview />
-        <TeamPreview />
         <InductionCTA />
         <ContactPreview />
       </motion.div>
