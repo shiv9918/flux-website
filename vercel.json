@@ -14,5 +14,8 @@
       "src": "/(.*)",
       "dest": "/Frontend/dist/$1"
     }
-  ]
+  ],
+  "buildCommand": "cd Frontend && npm install && npm run build",
+  "installCommand": "cd Frontend && npm install",
+  "outputDirectory": "Frontend/dist"
 }
