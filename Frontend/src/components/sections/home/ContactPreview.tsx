@@ -8,7 +8,7 @@ export default function ContactPreview() {
   const [emailCopied, setEmailCopied] = useState(false);
 
   const copyEmail = async () => {
-    await navigator.clipboard.writeText("contact@fluxsociety.com");
+    await navigator.clipboard.writeText("flux@mmmut.ac.in");
     setEmailCopied(true);
     setTimeout(() => setEmailCopied(false), 2000);
   };
@@ -50,10 +50,10 @@ export default function ContactPreview() {
               
               <div className="flex items-center gap-3 group/email">
                 <a
-                  href="mailto:contact@fluxsociety.com"
+                  href="mailto:flux@mmmut.ac.in"
                   className="text-foreground/80 hover:text-primary transition-colors duration-200 flex-1 break-all font-medium"
                 >
-                  contact@fluxsociety.com
+                  flux@mmmut.ac.in
                 </a>
                 <button
                   onClick={copyEmail}
