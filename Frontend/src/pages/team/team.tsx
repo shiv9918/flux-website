@@ -1,6 +1,6 @@
 // Navigation removed: page should render without header
 import TeamCard from "@/components/TeamCard";
-import { Mail, Phone, MapPin, Calendar } from "lucide-react";
+import { Mail, Instagram, Linkedin, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import aryanImage from "../../assets/images/Aryan.webp";
 import ashishImage from "../../assets/images/ashish.jpg";
@@ -163,30 +163,36 @@ const Team = () => {
     image: presidentImage
   };
 
+  // UPDATED CONTACT INFO - Email as normal text
   const contactInfo = [
     {
       icon: <Mail className="h-5 w-5" />,
       label: "Email",
-      value: "contact@flux.edu",
-      link: "mailto:contact@flux.edu"
+      description: "Drop us a line at:",
+      value: "flux@mmmut.ac.in",
+      link: "mailto:flux@mmmut.ac.in",
+      buttonText: null // No button for email
     },
     {
-      icon: <Phone className="h-5 w-5" />,
-      label: "Phone",
-      value: "+1 (555) 123-4567",
-      link: "tel:+15551234567"
+      icon: <Instagram className="h-5 w-5" />,
+      label: "Instagram",
+      value: "FLUX",
+      link: "https://instagram.com/flux.mmmut",
+      buttonText: "Connect"
+    },
+    {
+      icon: <Linkedin className="h-5 w-5" />,
+      label: "LinkedIn",
+      value: "FLUX",
+      link: "https://www.linkedin.com/company/flux-mmm/",
+      buttonText: "Connect"
     },
     {
       icon: <MapPin className="h-5 w-5" />,
       label: "Location",
-      value: "Engineering Building, Room 301",
-      link: "#"
-    },
-    {
-      icon: <Calendar className="h-5 w-5" />,
-      label: "Office Hours",
-      value: "Mon-Fri: 2:00 PM - 6:00 PM",
-      link: "#"
+      value: "CSED, MMMUT, Tech District, Gorakhpur, U.P.",
+      link: "https://www.google.com/maps/search/?api=1&query=CSED+MMMUT+Tech+District+Gorakhpur+UP",
+      buttonText: "View Map"
     }
   ];
 
@@ -284,10 +290,25 @@ const Team = () => {
                   {info.icon}
                 </div>
                 <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">{info.label}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{info.value}</p>
-                {info.link !== "#" && (
+                
+                {/* Special handling for email section - NO COLORING */}
+                {info.label === "Email" ? (
+                  <div className="mb-3">
+                    <p className="text-sm text-muted-foreground mb-1">{info.description}</p>
+                    <a href={info.link} className="text-sm">
+                      {info.value}
+                    </a>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground mb-3">{info.value}</p>
+                )}
+
+                {/* Button for non-email items */}
+                {info.buttonText && (
                   <Button variant="outline" size="sm" asChild className="group-hover:bg-primary/10 group-hover:border-primary/50 transition-all duration-300">
-                    <a href={info.link}>Contact</a>
+                    <a href={info.link} target="_blank" rel="noopener noreferrer">
+                      {info.buttonText}
+                    </a>
                   </Button>
                 )}
               </div>
