@@ -6,7 +6,9 @@ import HomePage from "@/pages/home"
 import AboutPage from "@/pages/about/AboutPage"
 import FacultyPage from "@/pages/faculty/FacultyPage"
 import EventsPage from "@/pages/events/events"
-import ComingSoon from "@/components/comingSoon"
+import ContactPage from "@/pages/contact/contact";
+import TeamPage from "@/pages/team/team";
+import Application from "@/pages/induction/Application";
 
 export default function MobileLayout() {
   return (
@@ -25,11 +27,14 @@ export default function MobileLayout() {
         <EventsPage />
       </section>
       <section id="team" className="pt-16 scroll-mt-16">
-        <ComingSoon title="Team" />
+        <TeamPage />
       </section>
       <section id="contact" className="pt-16 scroll-mt-16">
-        <ComingSoon title="Contact" />
+        <ContactPage />
       </section>
+        <section id="contact" className="pt-16 scroll-mt-16">
+            <Application />
+        </section>
     </div>
   )
 }
