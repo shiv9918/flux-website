@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 import { Link, useLocation } from "react-router-dom";
 import { SiGmail } from "react-icons/si";
-import { FaWhatsapp, FaInstagram, FaBars, FaTimes } from "react-icons/fa";
+import { FaWhatsapp, FaInstagram, FaBars, FaTimes ,FaLinkedin } from "react-icons/fa";
 import { motion } from "framer-motion";
 import logo from "@/assets/images/flux_logo.png"; // Updated logo path
 
@@ -247,6 +247,12 @@ const Navbar: React.FC = () => {
                   color: "#E4405F",
                   link: "https://www.instagram.com/flux.mmmut?igsh=aHI5c3Z1dGZwOGI2",
                 },
+
+                 {
+                  Icon: FaLinkedin,
+                  color: "#E4405F",
+                  link: "https://www.linkedin.com/company/flux-mmm/",
+                },
               ].map(({ Icon, color, link }, i) => (
                 <motion.a
                   key={i}
@@ -392,7 +398,7 @@ const Navbar: React.FC = () => {
               animate={{ opacity: isOpen ? 1 : 0 }}
               transition={{ delay: 0.5, duration: 0.3 }}
             >
-              {[SiGmail, FaWhatsapp, FaInstagram].map((Icon, i) => (
+              {[SiGmail, FaWhatsapp, FaInstagram , FaLinkedin].map((Icon, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ scale: 1.2 }}

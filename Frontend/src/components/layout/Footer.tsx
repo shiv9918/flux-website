@@ -1,6 +1,6 @@
 import { useState } from "react"
 import type { ChangeEvent } from "react"
-import {  FaWhatsapp, FaInstagram } from "react-icons/fa";
+import {  FaWhatsapp, FaInstagram , FaLinkedin } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import SectionWrapper from "../SectionWrapper"
 
@@ -133,6 +133,14 @@ export default function Footer() {
       rel="noopener noreferrer"
     >
       <FaInstagram className="hover:text-pink-400 cursor-pointer transition-colors duration-300" />
+    </a>
+
+        <a 
+      href="https://www.linkedin.com/company/flux-mmm/" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <FaLinkedin className="hover:text-sky-400 cursor-pointer transition-colors duration-300" />
     </a>
   </div>
 </div>

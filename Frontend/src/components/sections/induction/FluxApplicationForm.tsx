@@ -221,7 +221,7 @@ export const FluxApplicationForm = () => {
                 <SelectTrigger className="bg-input border-flux-border focus:border-primary">
                   <SelectValue placeholder="Select your year" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover backdrop-blur-none">
                   {years.map((year) => (
                     <SelectItem key={year} value={year}>
                       {year}
@@ -244,7 +244,7 @@ export const FluxApplicationForm = () => {
                 <SelectTrigger className="bg-input border-flux-border focus:border-primary">
                   <SelectValue placeholder="Select your branch" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover backdrop-blur-none">
                   {branches.map((branch) => (
                     <SelectItem key={branch} value={branch}>
                       {branch}
