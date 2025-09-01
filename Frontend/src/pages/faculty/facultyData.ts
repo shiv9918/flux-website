@@ -3,6 +3,7 @@ import shwetSir from '../../assets/images/shwetSir.jpeg';
 import SatyaSir from '../../assets/images/SatyaSir.jpeg';
 import ShantanuSir from '../../assets/images/ShantanuSir.jpg';
 
+
 export interface FacultyMember {
   id: number;
   name: string;
@@ -31,6 +32,7 @@ export interface FacultyMember {
   areasOfExpertise?: string;
 }
 
+
 export const facultyData: FacultyMember[] = [
   // 1st Position: Dr. Satya Prakash Yadav (Google Scholar kept)
   {
@@ -39,7 +41,7 @@ export const facultyData: FacultyMember[] = [
     title: "Associate Professor",
     department: "Computer Science and Engineering",
     specialization: ["Computer Vision", "Natural Language Processing", "Robotics", "Neural Networks"],
-    email: "satya.yadav@mmmut.ac.in",
+    email: "spycs@mmmut.ac.in",
     phone: "+91-9876543210",
     profileImage: SatyaSir,
     description: "Renowned researcher in computer vision and robotics, focusing on real-time applications and neural network optimization with extensive industry collaborations.",
@@ -58,7 +60,7 @@ export const facultyData: FacultyMember[] = [
     title: "Assistant Professor",
     department: "Computer Science and Engineering",
     specialization: ["Big Data", "Deep Learning", "Machine Learning", "AI"],
-    email: "satvik.vats@university.edu",
+    email: "svcse@mmmut.ac.in",
     phone: "+91-XXXXXXXXXX",
     profileImage: SatvikSir,
     description: "Specializing in Big Data analytics and Deep Learning applications with focus on real-world AI implementations.",
@@ -77,7 +79,7 @@ export const facultyData: FacultyMember[] = [
     title: "Assistant Professor",
     department: "Computer Science & Engineering",
     specialization: ["Internet of Things (IoT)", "Internet of Healthcare Things (IoHT)", "Wireless Networks", "Smart Systems"],
-    email: "shwet.ketu@university.edu",
+    email: "skcse@mmmut.ac.in",
     phone: "+91-XXXXXXXXXX",
     profileImage: shwetSir,
     description: "Expert in IoT systems and healthcare technology integration with extensive research in wireless communication protocols.",
@@ -95,7 +97,7 @@ export const facultyData: FacultyMember[] = [
     title: "Assistant Professor",
     department: "Computer Science and Engineering",
     specialization: ["Software Development", "Data Analysis", "Research Methodologies", "Academic Excellence"],
-    email: "shantanu.shahi@university.edu",
+    email: "dsscse@mmmut.ac.in",
     phone: "+91-XXXXXXXXXX",
     profileImage: ShantanuSir,
     description: "Expert in software development and data analysis with focus on research methodologies and academic excellence.",
