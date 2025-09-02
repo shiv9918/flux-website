@@ -36,10 +36,12 @@
 }
 
 
-
-
   html, body, #root {
     height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+  overflow-y: scroll;       /* still scrollable */
+  scrollbar-width: none;
     background-color: hsl(var(--bg));
     color: hsl(var(--fg));
   }

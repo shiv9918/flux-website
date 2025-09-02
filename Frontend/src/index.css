@@ -10,6 +10,12 @@ body {
 }
 
 @layer base {
+  body {
+    overflow-x: hidden;
+  }
+}
+
+@layer base {
   :root {
     --background: 220 13% 9%;
     --foreground: 210 40% 98%;
