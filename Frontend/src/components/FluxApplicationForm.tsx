@@ -56,7 +56,6 @@ const branches = [
   "Civil Engineering",
   "Information Technology",
   "Chemical Engineering",
-  "Biotechnology",
   "IoT",
   "BBA",
   "BPharma",
@@ -221,7 +220,7 @@ export const FluxApplicationForm = () => {
                 <SelectTrigger className="bg-input border-flux-border focus:border-primary">
                   <SelectValue placeholder="Select your year" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[#101318] text-white">
                   {years.map((year) => (
                     <SelectItem key={year} value={year}>
                       {year}
@@ -244,7 +243,7 @@ export const FluxApplicationForm = () => {
                 <SelectTrigger className="bg-input border-flux-border focus:border-primary">
                   <SelectValue placeholder="Select your branch" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[#101318] text-white">
                   {branches.map((branch) => (
                     <SelectItem key={branch} value={branch}>
                       {branch}
